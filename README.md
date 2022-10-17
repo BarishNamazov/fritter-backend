@@ -313,3 +313,116 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 
 - `403` if the user is not logged in
+
+#### `GET /api/friends?username=USERNAME` - Get friends of user with username `username`
+
+**Returns**
+
+- If `username` is not specified, it is assumed to be logged in user, if any.
+- An array of all friends of `username`, sorted by date of friendship
+
+**Throws**
+
+- `400` if user is not logged in and `username` is empty
+- `404` if `username` does not exists as username
+
+#### `GET /api/friends/requests?only=INCOMING|OUTGOING` - Get all friend requests
+
+**Returns**
+
+- An array of all friend requests the logged in user made or logged in user have gotten, sorted by time they are made.
+- If `only=INCOMING` is specified, return only incoming requests. If `only=OUTGOING` is specified, return only outgoing requests.
+
+**Throws**
+
+- `403` if the user is not logged in
+
+
+#### `POST /api/friends/requests` - Make a friend request
+
+**Body**
+
+- `username` _{string}_ - The other user's username
+
+**Returns**
+
+- A success message
+- An object with the created request
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if `username` does not exist
+- `409` if `username` is already a friend, or `username` is already requests to be friend, or it is the user itself
+
+#### `DELETE /api/friends/requests?requestId=REQUESTID` - Withdraw a made friend request
+
+**Body**
+
+- `requestId` _{string}_ - The other user's username
+
+**Returns**
+
+- A success message
+
+**Throws**
+
+- `403` if the user is not logged in or `requestId` is not created by user
+- `404` if `requestId` does not exist
+- `409` is `requestId` is already responded
+
+#### `POST /api/friends/requests/respond` - Respond to a friend request
+
+**Body**
+
+- `requestId` _{string}_ - The request id
+- `response` _{string}_ - "accept" or "reject"
+
+**Returns**
+- A success message
+
+**Throws**
+- `400` if any of body parameters missing or `response` is not `'accept'` or `'reject'`
+- `403` if `requestId` is not incoming request to user
+- `404` if `requestId` does not exist
+- `409` if `requestId` is already responded
+
+#### `GET /api/followers?username=USERNAME` - Get all followers of user with username `username`
+
+**Returns**
+
+- If `username` is not specified, it is assumed to be logged in user, if any.
+- An array of all followers of `username`, sorted by date of follow
+
+**Throws**
+
+- `400` if user is not logged in and `username` is empty
+- `404` if `username` does not exists as username
+
+#### `POST /api/followers` - Follow someone
+
+**Body**
+
+- `username` _{string}_ - The other user's username
+
+**Returns**
+
+- A success message
+- An object with the created follow
+
+**Throws**
+
+- `403` if the user is not logged in
+- `404` if `username` does not exist
+- `409` if `username` is already followed or it is the user itself
+
+#### `DELETE /api/followers?username=USERNAME` - Unfollow user with username `username`
+
+**Returns**
+- A success message
+
+**Throws**
+- `403` if the user is not logged in
+- `404` if `username` does not exist
+- `409` if `username` is not followed or it is the user itself
+
