@@ -3,23 +3,28 @@ import {Schema, model} from 'mongoose';
 
 export type QuickAccess = {
   _id: Types.ObjectId;
-  name: string;
-  url: string;
-  order: number;
+  userId: Types.ObjectId;
+  entries: Array<{name: string; url: string}>;
 };
 
 const QuickAccessSchema = new Schema({
-  name: {
-    type: String,
-    required: true
+  userId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'User'
   },
-  url: {
-    type: String,
-    required: true
-  },
-  order: {
-    type: Number,
-    required: true
+  entries: {
+    type: [{
+      name: {
+        type: String,
+        required: true
+      },
+      url: {
+        type: String,
+        required: true
+      }
+    }],
+    default: [{name: 'Fritter', url: 'https://www.fritter.com'}]
   }
 });
 
