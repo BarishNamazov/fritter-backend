@@ -4,73 +4,60 @@ import QuickAccessModel from './model';
 
 class QuickAccessCollection {
   /**
-   * Find by _id.
+   * Find a QuickAccess by userId. If does not exist, creates one.
+   *
+   * @param userId - The _id to look for an entry for
+   * @returns The entry with the given id, if any
+   */
+  static async findOneByUserId(userId: Types.ObjectId | string): Promise<HydratedDocument<QuickAccess>> {
+    const one = await QuickAccessModel.findOne({userId});
+    if (!one) {
+      const populate = new QuickAccessModel({userId});
+      await populate.save();
+      return populate;
+    }
+
+    return one;
+  }
+
+  /**
+   * Find a QuickAccess by quickAccessId.
    *
    * @param quickAccessId - The _id to look for an entry for
    * @returns The entry with the given id, if any
    */
-  static async findOneById(quickAccessId: Types.ObjectId | string): Promise<HydratedDocument<QuickAccess>> {
+  static async findOneByQuickAccessId(quickAccessId: Types.ObjectId | string): Promise<HydratedDocument<QuickAccess>> {
     return QuickAccessModel.findOne({_id: quickAccessId});
   }
 
   /**
-   * Find by a name.
-   *
-   * @param name - The name to look for an entry for
-   * @returns The entry with the given name, if any
-   */
-  static async findOneByName(name: string): Promise<HydratedDocument<QuickAccess>> {
-    return QuickAccessModel.findOne({name: name.trim()});
-  }
-
-  /**
-   * Add a new QuickAccess entry to the end of the existing entries.
-   *
-   * @param name - The name of the new QuickAccess entry
-   * @param url - The URL of the new QuickAccess entry
-   */
-  static async addOne(name: string, url: string): Promise<HydratedDocument<QuickAccess>> {
-    const count = await QuickAccessModel.countDocuments({});
-    const quickAccess = new QuickAccessModel({name, url, order: count});
-    await quickAccess.save();
-    return quickAccess;
-  }
-
-  /**
-   * Update QuickAccess entry name or URL.
+   * Update by quickAccessId.
    *
    * @param quickAccessId - The _id of QuickAccess entry to update
-   * @param details - An object with new updates
+   * @param quickAccessEntries - QuickAccess entries
    * @returns - The updated QuickAccess entry.
    */
-  static async updateOne(quickAccessId: Types.ObjectId | string, details: any): Promise<HydratedDocument<QuickAccess>> {
+  static async updateOneByQuickAccessId(quickAccessId: Types.ObjectId | string, quickAccessEntries: Array<{name: string; url: string}>): Promise<HydratedDocument<QuickAccess>> {
     const quickAccess = await QuickAccessModel.findOne({_id: quickAccessId});
-    if (details.name) {
-      quickAccess.name = details.name as string;
-    }
-
-    if (details.url) {
-      quickAccess.url = details.url as string;
-    }
-
+    quickAccess.entries = (quickAccessEntries as Array<{name: string; url: string}>);
     await quickAccess.save();
     return quickAccess;
   }
 
   /**
-   * Updates all QuickAccess entries with given order.
+   * Update by userId.
    *
-   * @param quickAccessEntries - The ordered array of QuickAccesss entries
+   * @param userId - The _id of QuickAccess entry to update
+   * @param quickAccessEntries - QuickAccess entries
+   * @returns - The updated QuickAccess entry.
    */
-  static async updateAll(quickAccessEntries: Array<{name: string; url: string}>) {
-    await QuickAccessModel.deleteMany({});
-    const promises: Array<Promise<any>> = [];
-    for (const [order, entry] of quickAccessEntries.entries()) {
-      const quickAccess = new QuickAccessModel({...entry, order});
-      promises.push(quickAccess.save());
-    }
-
-    await Promise.all(promises);
+  static async updateOneByUserId(userId: Types.ObjectId | string, quickAccessEntries: Array<{name: string; url: string}>): Promise<HydratedDocument<QuickAccess>> {
+    const quickAccess = await QuickAccessModel.findOne({userId});
+    console.log(quickAccess);
+    console.log(quickAccessEntries);
+    quickAccess.entries = (quickAccessEntries as Array<{name: string; url: string}>);
+    await quickAccess.save();
+    return quickAccess;
   }
 }
 
