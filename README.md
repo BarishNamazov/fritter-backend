@@ -426,3 +426,44 @@ This renders the `index.html` file that will be used to interact with the backen
 - `404` if `username` does not exist
 - `409` if `username` is not followed or it is the user itself
 
+(following APIs are very draft and I am planning to ask questions about them, so I only sketched them instead of full descriptions)
+
+#### `GET /api/comments?author=USERNAME` - Get comments of `author`
+
+#### `GET /api/comments?commentId=COMMENTID` - Get comment with id `commentId`
+
+#### `GET /api/comments/:freetId?` - Get comments of freet with id `freetId`
+
+#### `POST /api/comments/:freetId?` - Post comment under freet with id `freetId`
+
+#### `PUT /api/comments/:commentId?` - Edit comment with id `commentId`
+
+#### `DELETE /api/comments/:commentId?` - Delete comment with id `commentId`
+
+#### `GET /api/upvotes?freetId=FREETID` - Get number of upvotes for freet with id `freetId`
+
+#### `GET /api/upvotes?commentId=COMMENTID` - Get number of upvotes for comment with id `commentId`
+
+#### `PUT /api/upvotes/` - Vote (upvote or downvote) object (freet or comment) with given id
+
+#### `DELETE /api/upvotes?freetId=FREETID` - Unvote freet with given id
+
+#### `DELETE /api/upvotes?commentId=COMMENTID` - Unvote comment with given id
+
+#### `GET /api/trusted` - Get list of all trusted users
+
+#### `GET /api/trusted/:username?` - Get if user with given username is trusted
+
+#### `PUT /api/trusted/:username?` - Make user trusted
+
+#### `DELETE /api/trusted/:username?` - Make user not trusted
+
+#### `GET /quickaccess` - Get QuickAccess entries for logged in user (implemented)
+
+#### `PUT /quickaccess` - Update QuickAccess entries for logged in user (implemented)
+
+#### `GET /takebreak/:username?` - Get if user with `username` is taking a break
+
+#### `POST /takebreak/:username?` - Take a break with given freet in body
+
+#### `POST /takebreak/:username?/end` - End the break with given freet in body (can't use `DELETE` since it has no body)
