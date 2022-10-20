@@ -11,7 +11,7 @@ import * as userValidator from '../user/middleware';
 import {userRouter} from '../user/router';
 import {freetRouter} from '../freet/router';
 import {quickAccessRouter} from '../quickaccess/router';
-import {MONGO_SRV, PORT} from 'global';
+import {MONGO_SRV, PORT} from '../global';
 
 // Connect to mongoDB
 const mongoConnectionUrl = MONGO_SRV;

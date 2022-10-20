@@ -1,4 +1,4 @@
-import {BASEURL} from 'global';
+import {BASEURL} from '../global';
 import type {Types} from 'mongoose';
 import {Schema, model} from 'mongoose';
 

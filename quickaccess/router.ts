@@ -1,8 +1,8 @@
 import type {Request, Response} from 'express';
 import express from 'express';
 import QuickAccessCollection from './collection';
-import * as userValidator from '../user/middleware';
 import * as quickAccessValidator from './middleware';
+import * as userValidator from '../user/middleware';
 
 const router = express.Router();
 
