@@ -25,9 +25,7 @@ const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:
  * @returns {QuickAccessResponse} - The user object without the password
  */
 const constructQuickAccessResponse = (quickAccess: HydratedDocument<QuickAccess>): QuickAccessResponse => ({
-  ...quickAccess.toObject({versionKey: false}),
-  userId: quickAccess.userId.toString(),
-  _id: quickAccess._id.toString(),
+  ...quickAccess.toObject(),
   dateUpdated: formatDate(quickAccess.dateUpdated)
 });
 

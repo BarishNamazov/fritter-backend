@@ -34,7 +34,11 @@ const QuickAccessSchema = new Schema({
     type: Date,
     required: true
   }
+}, {
+  toObject: {versionKey: false}
 });
+
+QuickAccessSchema.index({userId: 1});
 
 const QuickAccessModel = model<QuickAccess>('QuickAccess', QuickAccessSchema);
 export default QuickAccessModel;
