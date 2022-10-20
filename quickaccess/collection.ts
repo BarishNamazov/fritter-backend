@@ -12,7 +12,7 @@ class QuickAccessCollection {
   static async findOneByUserId(userId: Types.ObjectId | string): Promise<HydratedDocument<QuickAccess>> {
     const one = await QuickAccessModel.findOne({userId});
     if (!one) {
-      const populate = new QuickAccessModel({userId});
+      const populate = new QuickAccessModel({userId, dateUpdated: new Date()});
       await populate.save();
       return populate;
     }
@@ -39,7 +39,8 @@ class QuickAccessCollection {
    */
   static async updateOneByQuickAccessId(quickAccessId: Types.ObjectId | string, quickAccessEntries: Array<{name: string; url: string}>): Promise<HydratedDocument<QuickAccess>> {
     const quickAccess = await QuickAccessModel.findOne({_id: quickAccessId});
-    quickAccess.entries = (quickAccessEntries as Array<{name: string; url: string}>);
+    quickAccess.entries = quickAccessEntries;
+    quickAccess.dateUpdated = new Date();
     await quickAccess.save();
     return quickAccess;
   }
@@ -53,7 +54,8 @@ class QuickAccessCollection {
    */
   static async updateOneByUserId(userId: Types.ObjectId | string, quickAccessEntries: Array<{name: string; url: string}>): Promise<HydratedDocument<QuickAccess>> {
     const quickAccess = await QuickAccessModel.findOne({userId});
-    quickAccess.entries = (quickAccessEntries as Array<{name: string; url: string}>);
+    quickAccess.entries = quickAccessEntries;
+    quickAccess.dateUpdated = new Date();
     await quickAccess.save();
     return quickAccess;
   }

@@ -6,6 +6,7 @@ export type QuickAccess = {
   _id: Types.ObjectId;
   userId: Types.ObjectId;
   entries: Array<{name: string; url: string}>;
+  dateUpdated: Date;
 };
 
 const QuickAccessSchema = new Schema({
@@ -25,7 +26,13 @@ const QuickAccessSchema = new Schema({
         required: true
       }
     }],
+    _id: false,
+    required: true,
     default: [{name: 'Fritter Home', url: BASEURL}]
+  },
+  dateUpdated: {
+    type: Date,
+    required: true
   }
 });
 

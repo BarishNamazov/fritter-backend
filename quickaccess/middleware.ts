@@ -1,9 +1,4 @@
-
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-
 import type {Request, Response, NextFunction} from 'express';
-import {Types} from 'mongoose';
-import QuickAccessCollection from './collection';
 import validator from 'validator';
 
 const isValidEntries = (req: Request, res: Response, next: NextFunction) => {
