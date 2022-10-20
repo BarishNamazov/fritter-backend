@@ -4,7 +4,7 @@ import QuickAccessModel from './model';
 
 class QuickAccessCollection {
   /**
-   * Find a QuickAccess by userId. If does not exist, creates one.
+   * Find a QuickAccess by userId. If does not exist, creates one and returns that.
    *
    * @param userId - The _id to look for an entry for
    * @returns The entry with the given id, if any
@@ -53,8 +53,6 @@ class QuickAccessCollection {
    */
   static async updateOneByUserId(userId: Types.ObjectId | string, quickAccessEntries: Array<{name: string; url: string}>): Promise<HydratedDocument<QuickAccess>> {
     const quickAccess = await QuickAccessModel.findOne({userId});
-    console.log(quickAccess);
-    console.log(quickAccessEntries);
     quickAccess.entries = (quickAccessEntries as Array<{name: string; url: string}>);
     await quickAccess.save();
     return quickAccess;

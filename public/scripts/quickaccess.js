@@ -12,7 +12,7 @@ function getQuickAccess(fields) {
 
 function editQuickAccess(fields) {
   const entries = fields.entries.split('\n').map(x => x.trim()).filter(x => x).map(x => {
-    return { name: x.split(",")[0], url: x.split(",")[1] };
+    return { name: x.split(",")[0].trim(), url: x.split(",")[1].trim() };
   });
   console.log(entries);
   fetch('/api/quickaccess', {method: 'PUT', body: JSON.stringify({entries}), headers: {'Content-Type': 'application/json'}})

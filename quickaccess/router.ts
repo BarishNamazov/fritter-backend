@@ -24,7 +24,8 @@ router.get(
 router.put(
   '/',
   [
-    userValidator.isUserLoggedIn
+    userValidator.isUserLoggedIn,
+    quickAccessValidator.isValidEntries
   ],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? '';

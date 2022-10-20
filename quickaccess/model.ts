@@ -1,3 +1,4 @@
+import {BASEURL} from 'global';
 import type {Types} from 'mongoose';
 import {Schema, model} from 'mongoose';
 
@@ -24,7 +25,7 @@ const QuickAccessSchema = new Schema({
         required: true
       }
     }],
-    default: [{name: 'Fritter', url: 'https://www.fritter.com'}]
+    default: [{name: 'Fritter Home', url: BASEURL}]
   }
 });
 

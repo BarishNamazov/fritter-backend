@@ -7,17 +7,14 @@ import path from 'path';
 import logger from 'morgan';
 import http from 'http';
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
 import * as userValidator from '../user/middleware';
 import {userRouter} from '../user/router';
 import {freetRouter} from '../freet/router';
 import {quickAccessRouter} from '../quickaccess/router';
-
-// Load environmental variables
-dotenv.config({});
+import {MONGO_SRV, PORT} from 'global';
 
 // Connect to mongoDB
-const mongoConnectionUrl = process.env.MONGO_SRV;
+const mongoConnectionUrl = MONGO_SRV;
 if (!mongoConnectionUrl) {
   throw new Error('Please add the MongoDB connection SRV as \'MONGO_SRV\'');
 }
@@ -48,7 +45,7 @@ app.set('view engine', 'html');
 app.set('views', path.join(__dirname, '../public'));
 
 // Set the port
-app.set('port', process.env.PORT || 3000);
+app.set('port', PORT);
 
 // Log requests in the terminal
 app.use(logger('dev'));
