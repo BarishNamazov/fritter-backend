@@ -8,6 +8,7 @@
   <script src="/scripts/freet.js"></script>
   <script src="/scripts/user.js"></script>
   <script src="/scripts/quickaccess.js"></script>
+  <script src="/scripts/follow.js"></script>
   <script src="/scripts/index.js"></script>
 </head>
 
@@ -135,6 +136,39 @@ My Freets, https://www.fritter.com/my/freets
           </div>
           <input type="submit" value="Edit QuickAccess entries">
         </form>
+
+        <form id="get-followings">
+          <h3>Get your followings</h3>
+          <input type="submit" value="See who you follow">
+        </form>
+
+        <form id="follow-user">
+          <h3>Follow someone</h3>
+          <div>
+            <label for="followee">Followee</label>
+            <input id="followee" name="followee"/>
+          </div>
+          <input type="submit" value="Follow">
+        </form>
+
+        <form id="unfollow-user">
+          <h3>Unfollow someone</h3>
+          <div>
+            <label for="followee">Followee</label>
+            <input id="followee" name="followee"/>
+          </div>
+          <input type="submit" value="Unfollow">
+        </form>
+
+        <form id="count-followers">
+          <h3>Follower count</h3>
+          <div>
+            <label for="followee">Followee</label>
+            <input id="followee" name="followee"/>
+          </div>
+          <input type="submit" value="How many people follow">
+        </form>
+
       </div>
     </section>
     <section>

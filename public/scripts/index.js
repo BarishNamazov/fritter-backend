@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 // Show an object on the screen.
 function showObject(obj) {
   const pre = document.getElementById('response');
@@ -40,7 +42,11 @@ const formsAndHandlers = {
   'edit-freet': editFreet,
   'delete-freet': deleteFreet,
   'get-quickaccess': getQuickAccess,
-  'edit-quickaccess': editQuickAccess
+  'edit-quickaccess': editQuickAccess,
+  'get-followings': getFollowings,
+  'follow-user': follow,
+  'unfollow-user': unfollow,
+  'count-followers': countFollowers
 };
 
 // Attach handlers to forms
