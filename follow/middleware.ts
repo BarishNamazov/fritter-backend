@@ -22,7 +22,12 @@ const isNotAlreadyFollowing = async (req: Request, res: Response, next: NextFunc
   const followee = (req.body.followee || req.query.followee) as string;
 
   const followerId = req.session.userId as string;
-  const followeeId = (await UserCollection.findOneByUsername(followee))._id;
+  const followeeId = (await UserCollection.findOneByUsername(followee))._id ?? '' as string;
+
+  if (followerId === followeeId) {
+    res.status(409).json({error: 'You cannot follow yourself.'});
+    return;
+  }
 
   const follow = await FollowCollection.deleteOneByUserIds(followerId, followeeId);
   if (follow) {
@@ -36,13 +41,18 @@ const isFollowing = async (req: Request, res: Response, next: NextFunction) => {
   const followee = (req.body.followee || req.query.followee) as string;
 
   const followerId = req.session.userId as string;
-  const followeeId = (await UserCollection.findOneByUsername(followee))._id;
+  const followeeId = (await UserCollection.findOneByUsername(followee))._id ?? '' as string;
+
+  if (followerId === followeeId) {
+    res.status(409).json({error: 'You cannot unfollow yourself.'});
+    return;
+  }
 
   const follow = await FollowCollection.deleteOneByUserIds(followerId, followeeId);
   if (follow) {
     next();
   } else {
-    res.status(404).json({error: `You are not following user with username "${followee}"`});
+    res.status(404).json({error: `You are already not following user with username "${followee}"`});
   }
 };
 
