@@ -10,7 +10,7 @@ type FollowsPromise = Promise<Array<HydratedDocument<Follow>>>;
 class FollowCollection {
   static async addOne(follower: MongoId, followee: MongoId): FollowPromise {
     const follow = new FollowModel({
-      follower, followee, date: new Date()
+      follower, followee, dateFollowing: new Date()
     });
     await follow.save();
     return follow.populate(['follower', 'followee']);
@@ -18,6 +18,10 @@ class FollowCollection {
 
   static async findOneById(followId: MongoId): FollowPromise {
     return FollowModel.findOne({_id: followId}).populate(['follower', 'followee']);
+  }
+
+  static async findOneByUserIds(follower: MongoId, followee: MongoId): FollowPromise {
+    return FollowModel.findOne({follower, followee});
   }
 
   static async findAllByFollowerId(follower: MongoId): FollowsPromise {
@@ -46,6 +50,11 @@ class FollowCollection {
   static async deleteOneByUserIds(follower: MongoId, followee: MongoId): Promise<boolean> {
     const follow = await FollowModel.findOne({follower, followee});
     return this.deleteOneById(follow._id);
+  }
+
+  static async countFollowers(followeeUsername: string): Promise<number> {
+    const followee = await UserCollection.findOneByUsername(followeeUsername);
+    return FollowModel.countDocuments({followee: followee._id});
   }
 }
 

@@ -49,7 +49,7 @@ router.delete(
   ],
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.session.userId as string;
-    const followee = req.body.followee as string;
+    const followee = req.query.followee as string;
     const followeeId = (await UserCollection.findOneByUsername(followee))._id;
     await FollowCollection.deleteOneByUserIds(userId, followeeId);
     res.status(200).json({
@@ -57,3 +57,21 @@ router.delete(
     });
   }
 );
+
+router.get(
+  '/count',
+  [
+    followValidator.isValidFollowee
+  ],
+  async (req: Request, res: Response, next: NextFunction) => {
+    const followee = req.query.followee as string;
+    res.status(200).json({
+      username: followee,
+      followerCount: await FollowCollection.countFollowers(followee)
+    });
+  }
+);
+
+export {
+  router as followRouter
+};

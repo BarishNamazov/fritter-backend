@@ -10,6 +10,7 @@ import mongoose from 'mongoose';
 import * as userValidator from '../user/middleware';
 import {userRouter} from '../user/router';
 import {freetRouter} from '../freet/router';
+import {followRouter} from '../follow/router';
 import {quickAccessRouter} from '../quickaccess/router';
 import {MONGO_SRV, PORT} from '../global';
 
@@ -74,6 +75,7 @@ app.get('/', (req: Request, res: Response) => {
 // Add routers from routes folder
 app.use('/api/users', userRouter);
 app.use('/api/freets', freetRouter);
+app.use('/api/follows', followRouter);
 app.use('/api/quickaccess', quickAccessRouter);
 
 // Catch all the other routes and display error message
