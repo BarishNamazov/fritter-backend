@@ -1,6 +1,7 @@
 import {BASEURL} from '../global';
 import type {Types} from 'mongoose';
 import {Schema, model} from 'mongoose';
+import type {User} from '../user/model';
 
 export type QuickAccess = {
   _id: Types.ObjectId;
