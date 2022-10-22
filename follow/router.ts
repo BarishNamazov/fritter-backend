@@ -21,8 +21,8 @@ router.get(
   }
 );
 
-router.post(
-  '/',
+router.put(
+  '/:followee?',
   [
     userValidator.isUserLoggedIn,
     followValidator.isValidFollowee,
@@ -30,18 +30,18 @@ router.post(
   ],
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.session.userId as string;
-    const followee = req.body.followee as string;
+    const {followee} = req.params;
     const followeeId = (await UserCollection.findOneByUsername(followee))._id;
     const follow = await FollowCollection.addOne(userId, followeeId);
     res.status(201).json({
-      message: `You are now following ${followee}`,
+      message: `You are now following ${followee}.`,
       follow: util.constructFollowResponse(follow)
     });
   }
 );
 
 router.delete(
-  '/',
+  '/:followee',
   [
     userValidator.isUserLoggedIn,
     followValidator.isValidFollowee,
@@ -49,22 +49,22 @@ router.delete(
   ],
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.session.userId as string;
-    const followee = req.query.followee as string;
+    const {followee} = req.params;
     const followeeId = (await UserCollection.findOneByUsername(followee))._id;
     await FollowCollection.deleteOneByUserIds(userId, followeeId);
     res.status(200).json({
-      message: `You unfollowed ${followee}`
+      message: `You unfollowed ${followee}.`
     });
   }
 );
 
 router.get(
-  '/count',
+  '/count/:followee',
   [
     followValidator.isValidFollowee
   ],
   async (req: Request, res: Response, next: NextFunction) => {
-    const followee = req.query.followee as string;
+    const {followee} = req.params;
     res.status(200).json({
       username: followee,
       followerCount: await FollowCollection.countFollowers(followee)

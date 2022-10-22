@@ -4,7 +4,7 @@ import FollowCollection from './collection';
 import UserCollection from '../user/collection';
 
 const isValidFollowee = async (req: Request, res: Response, next: NextFunction) => {
-  const followee = (req.body.followee || req.query.followee) as string;
+  const {followee} = req.params;
   if (!followee || followee === undefined || followee === null) {
     res.status(400).json({error: 'Missing followee argument in request.'});
     return;
@@ -19,8 +19,7 @@ const isValidFollowee = async (req: Request, res: Response, next: NextFunction) 
 };
 
 const isNotAlreadyFollowing = async (req: Request, res: Response, next: NextFunction) => {
-  const followee = (req.body.followee || req.query.followee) as string;
-
+  const {followee} = req.params;
   const followerId = req.session.userId as string;
   const followeeId = (await UserCollection.findOneByUsername(followee))._id.toString();
   console.log(followerId, followeeId);
@@ -38,7 +37,7 @@ const isNotAlreadyFollowing = async (req: Request, res: Response, next: NextFunc
 };
 
 const isFollowing = async (req: Request, res: Response, next: NextFunction) => {
-  const followee = (req.body.followee || req.query.followee) as string;
+  const {followee} = req.params;
 
   const followerId = req.session.userId as string;
   const followeeId = (await UserCollection.findOneByUsername(followee))._id.toString();
