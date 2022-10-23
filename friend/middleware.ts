@@ -19,7 +19,7 @@ const getFriendUsername = (params: Record<string, string>) => {
   return '';
 };
 
-const isValidFriend = async (req: Request, res: Response, next: NextFunction) => {
+const isValidUser = async (req: Request, res: Response, next: NextFunction) => {
   const friendUsername = getFriendUsername(req.params);
   if (!friendUsername) {
     return res.status(400).json({
@@ -90,7 +90,7 @@ const isFriendRequestExists = async (req: Request, res: Response, next: NextFunc
   const friendRequest = await FriendRequestCollection.findPendingFriendRequest(userId, friendId);
   if (!friendRequest) {
     return res.status(400).json({
-      error: `You currently do not have a pending friend request to ${friendUsername}.`
+      error: `You currently do not have a pending friend request with ${friendUsername}.`
     });
   }
 
@@ -136,26 +136,6 @@ const isValidRequestee = async (req: Request, res: Response, next: NextFunction)
   next();
 };
 
-const isValidRequester = async (req: Request, res: Response, next: NextFunction) => {
-  const userId = req.session.userId as string;
-  const friendUsername = getFriendUsername(req.params);
-  if (!friendUsername) {
-    return res.status(400).json({
-      error: 'Username not provided.'
-    });
-  }
-
-  const friendId = (await UserCollection.findOneByUsername(friendUsername))._id;
-  const friendRequest = await FriendRequestCollection.findPendingFriendRequest(friendId, userId);
-  if (!friendRequest) {
-    return res.status(400).json({
-      error: `You do not have a pending friend request from ${friendUsername}.`
-    });
-  }
-
-  next();
-};
-
 const isValidResponse = async (req: Request, res: Response, next: NextFunction) => {
   const response = req.body.response as string;
   if (response !== 'accept' && response !== 'reject') {
@@ -168,12 +148,11 @@ const isValidResponse = async (req: Request, res: Response, next: NextFunction) 
 };
 
 export {
-  isValidFriend,
+  isValidUser,
   isFriend,
   isNotAlreadyFriends,
   isFriendRequestExists,
   isFriendRequestNotExists,
   isValidRequestee,
-  isValidRequester,
   isValidResponse
 };

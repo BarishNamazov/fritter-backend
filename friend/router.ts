@@ -26,7 +26,7 @@ router.delete(
   '/:friend?',
   [
     UserValidator.isUserLoggedIn,
-    FriendValidator.isValidFriend,
+    FriendValidator.isValidUser,
     FriendValidator.isFriend
   ],
   async (req: Request, res: Response, next: NextFunction) => {
@@ -61,6 +61,7 @@ router.put(
   '/requests/:requestee?',
   [
     UserValidator.isUserLoggedIn,
+    FriendValidator.isValidUser,
     FriendValidator.isValidRequestee,
     FriendValidator.isNotAlreadyFriends,
     FriendValidator.isFriendRequestNotExists
@@ -81,8 +82,7 @@ router.delete(
   '/requests/:requestee?',
   [
     UserValidator.isUserLoggedIn,
-    FriendValidator.isValidRequestee,
-    FriendValidator.isNotAlreadyFriends,
+    FriendValidator.isValidUser,
     FriendValidator.isFriendRequestExists
   ],
   async (req: Request, res: Response, next: NextFunction) => {
@@ -100,8 +100,7 @@ router.put(
   '/requests/respond/:requester?',
   [
     UserValidator.isUserLoggedIn,
-    FriendValidator.isValidRequester,
-    FriendValidator.isNotAlreadyFriends,
+    FriendValidator.isValidUser,
     FriendValidator.isFriendRequestExists,
     FriendValidator.isValidResponse
   ],
