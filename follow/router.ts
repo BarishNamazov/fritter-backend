@@ -61,7 +61,7 @@ router.delete(
 );
 
 router.get(
-  '/count/:followee',
+  '/count/:followee?',
   [
     followValidator.isValidFollowee
   ],
