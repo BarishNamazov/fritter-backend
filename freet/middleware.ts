@@ -1,4 +1,5 @@
 import type {Request, Response, NextFunction} from 'express';
+import {FriendCollection} from 'friend/collection';
 import {Types} from 'mongoose';
 import FreetCollection from '../freet/collection';
 
@@ -33,9 +34,18 @@ const isValidFreetContent = (req: Request, res: Response, next: NextFunction) =>
     return;
   }
 
-  if (content.length > 140) {
-    res.status(413).json({
-      error: 'Freet content must be no more than 140 characters.'
+  // Do not want the following check
+  // if (content.length > 140) {
+  //   res.status(413).json({
+  //     error: 'Freet content must be no more than 140 characters.'
+  //   });
+  //   return;
+  // }
+
+  const {visibility} = req.body as {visibility: string};
+  if (visibility !== 'public' && visibility !== 'friends' && visibility !== 'only me') {
+    res.status(400).json({
+      error: 'Freet visibility must be either public, friends, or only me.'
     });
     return;
   }
@@ -59,8 +69,43 @@ const isValidFreetModifier = async (req: Request, res: Response, next: NextFunct
   next();
 };
 
+const isFreetViewAllowed = async (req: Request, res: Response, next: NextFunction) => {
+  const freet = await FreetCollection.findOne(req.params.freetId);
+
+  if (freet.visibility === 'public') {
+    next();
+    return;
+  }
+
+  if (!req.session.userId) {
+    res.status(403).json({
+      error: 'Not allowed to view this freet.'
+    });
+    return;
+  }
+
+  const userId = req.session.userId as string;
+
+  if (freet.visibility === 'only me' && userId !== freet.authorId._id.toString()) {
+    res.status(403).json({
+      error: 'Not allowed to view this freet.'
+    });
+    return;
+  }
+
+  if (freet.visibility === 'friends' && !(await FriendCollection.findOneFriend(userId, freet.authorId._id.toString()))) {
+    res.status(403).json({
+      error: 'Not allowed to view this freet.'
+    });
+    return;
+  }
+
+  next();
+};
+
 export {
   isValidFreetContent,
   isFreetExists,
-  isValidFreetModifier
+  isValidFreetModifier,
+  isFreetViewAllowed
 };
