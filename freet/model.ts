@@ -14,6 +14,7 @@ export type Freet = {
   dateCreated: Date;
   content: string;
   dateModified: Date;
+  visibility: 'public' | 'friends' | 'only me';
 };
 
 export type PopulatedFreet = {
@@ -22,6 +23,7 @@ export type PopulatedFreet = {
   dateCreated: Date;
   content: string;
   dateModified: Date;
+  visibility: 'public' | 'friends' | 'only me';
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -49,6 +51,13 @@ const FreetSchema = new Schema<Freet>({
   dateModified: {
     type: Date,
     required: true
+  },
+  // The visibility of the freet
+  visibility: {
+    type: String,
+    required: true,
+    enum: ['public', 'friends', 'only me'],
+    default: 'public'
   }
 });
 
