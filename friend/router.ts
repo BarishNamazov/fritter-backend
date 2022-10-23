@@ -23,7 +23,7 @@ router.get(
 );
 
 router.delete(
-  '/:friend',
+  '/:friend?',
   [
     UserValidator.isUserLoggedIn,
     FriendValidator.isValidFriend,
@@ -58,7 +58,7 @@ router.get(
 );
 
 router.put(
-  '/requests/:requestee',
+  '/requests/:requestee?',
   [
     UserValidator.isUserLoggedIn,
     FriendValidator.isValidRequestee,
@@ -78,7 +78,7 @@ router.put(
 );
 
 router.delete(
-  '/requests/:requestee',
+  '/requests/:requestee?',
   [
     UserValidator.isUserLoggedIn,
     FriendValidator.isValidRequestee,
@@ -97,7 +97,7 @@ router.delete(
 );
 
 router.put(
-  '/requests/respond/:requester',
+  '/requests/respond/:requester?',
   [
     UserValidator.isUserLoggedIn,
     FriendValidator.isValidRequester,

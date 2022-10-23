@@ -3,12 +3,34 @@ import {Types} from 'mongoose';
 import {FriendCollection, FriendRequestCollection} from './collection';
 import UserCollection from 'user/collection';
 
+const getFriendUsername = (params: Record<string, string>) => {
+  if (params.friend) {
+    return params.friend;
+  }
+
+  if (params.requester) {
+    return params.requester;
+  }
+
+  if (params.requestee) {
+    return params.requestee;
+  }
+
+  return '';
+};
+
 const isValidFriend = async (req: Request, res: Response, next: NextFunction) => {
-  const {friendUsername} = req.params;
+  const friendUsername = getFriendUsername(req.params);
+  if (!friendUsername) {
+    return res.status(400).json({
+      error: 'Username not provided.'
+    });
+  }
+
   const friendId = (await UserCollection.findOneByUsername(friendUsername))._id;
   if (!friendId) {
     return res.status(404).json({
-      message: `User ${friendUsername} does not exist.`
+      error: `User ${friendUsername} does not exist.`
     });
   }
 
@@ -17,12 +39,18 @@ const isValidFriend = async (req: Request, res: Response, next: NextFunction) =>
 
 const isFriend = async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.session.userId as string;
-  const {friendUsername} = req.params;
+  const friendUsername = getFriendUsername(req.params);
+  if (!friendUsername) {
+    return res.status(400).json({
+      error: 'Username not provided.'
+    });
+  }
+
   const friendId = (await UserCollection.findOneByUsername(friendUsername))._id;
   const friend = await FriendCollection.findOneFriend(userId, friendId);
   if (!friend) {
     return res.status(400).json({
-      message: `You are not friends with ${friendUsername}.`
+      error: `You are not friends with ${friendUsername}.`
     });
   }
 
@@ -31,12 +59,18 @@ const isFriend = async (req: Request, res: Response, next: NextFunction) => {
 
 const isNotAlreadyFriends = async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.session.userId as string;
-  const {friendUsername} = req.params;
+  const friendUsername = getFriendUsername(req.params);
+  if (!friendUsername) {
+    return res.status(400).json({
+      error: 'Username not provided.'
+    });
+  }
+
   const friendId = (await UserCollection.findOneByUsername(friendUsername))._id;
   const friend = await FriendCollection.findOneFriend(userId, friendId);
   if (friend) {
     return res.status(400).json({
-      message: `You are already friends with ${friendUsername}.`
+      error: `You are already friends with ${friendUsername}.`
     });
   }
 
@@ -45,12 +79,18 @@ const isNotAlreadyFriends = async (req: Request, res: Response, next: NextFuncti
 
 const isFriendRequestExists = async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.session.userId as string;
-  const {friendUsername} = req.params;
+  const friendUsername = getFriendUsername(req.params);
+  if (!friendUsername) {
+    return res.status(400).json({
+      error: 'Username not provided.'
+    });
+  }
+
   const friendId = (await UserCollection.findOneByUsername(friendUsername))._id;
   const friendRequest = await FriendRequestCollection.findPendingFriendRequest(userId, friendId);
   if (!friendRequest) {
     return res.status(400).json({
-      message: `You currently do not have a pending friend request to ${friendUsername}.`
+      error: `You currently do not have a pending friend request to ${friendUsername}.`
     });
   }
 
@@ -59,12 +99,18 @@ const isFriendRequestExists = async (req: Request, res: Response, next: NextFunc
 
 const isFriendRequestNotExists = async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.session.userId as string;
-  const {friendUsername} = req.params;
+  const friendUsername = getFriendUsername(req.params);
+  if (!friendUsername) {
+    return res.status(400).json({
+      error: 'Username not provided.'
+    });
+  }
+
   const friendId = (await UserCollection.findOneByUsername(friendUsername))._id;
   const friendRequest = await FriendRequestCollection.findPendingFriendRequest(userId, friendId);
   if (friendRequest) {
     return res.status(400).json({
-      message: `You already have a pending friend request to ${friendUsername}.`
+      error: `You already have a pending friend request to ${friendUsername}.`
     });
   }
 
@@ -73,11 +119,17 @@ const isFriendRequestNotExists = async (req: Request, res: Response, next: NextF
 
 const isValidRequestee = async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.session.userId as string;
-  const {friendUsername} = req.params;
+  const friendUsername = getFriendUsername(req.params);
+  if (!friendUsername) {
+    return res.status(400).json({
+      error: 'Username not provided.'
+    });
+  }
+
   const friendId = (await UserCollection.findOneByUsername(friendUsername))._id;
   if (userId === friendId.toString()) {
     return res.status(400).json({
-      message: 'You cannot send a friend request to yourself.'
+      error: 'You cannot send a friend request to yourself.'
     });
   }
 
@@ -86,12 +138,18 @@ const isValidRequestee = async (req: Request, res: Response, next: NextFunction)
 
 const isValidRequester = async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.session.userId as string;
-  const {friendUsername} = req.params;
+  const friendUsername = getFriendUsername(req.params);
+  if (!friendUsername) {
+    return res.status(400).json({
+      error: 'Username not provided.'
+    });
+  }
+
   const friendId = (await UserCollection.findOneByUsername(friendUsername))._id;
   const friendRequest = await FriendRequestCollection.findPendingFriendRequest(friendId, userId);
   if (!friendRequest) {
     return res.status(400).json({
-      message: `You do not have a pending friend request from ${friendUsername}.`
+      error: `You do not have a pending friend request from ${friendUsername}.`
     });
   }
 
@@ -102,7 +160,7 @@ const isValidResponse = async (req: Request, res: Response, next: NextFunction) 
   const response = req.body.response as string;
   if (response !== 'accept' && response !== 'reject') {
     return res.status(400).json({
-      message: 'Invalid response. Needs to be either accept or reject.'
+      error: 'Invalid response. Needs to be either accept or reject.'
     });
   }
 
