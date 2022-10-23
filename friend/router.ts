@@ -10,20 +10,37 @@ import * as util from './util';
 const router = express.Router();
 
 router.get(
-  '/',
+  '/list/:friend?',
   [
     UserValidator.isUserLoggedIn
   ],
   async (req: Request, res: Response, next: NextFunction) => {
+    if (req.params.friend) {
+      next();
+      return;
+    }
+
     const userId = req.session.userId as string;
     const allFriends = await FriendCollection.findAllFriends(userId);
+    const response = allFriends.map(util.constructFriendResponse);
+    res.status(200).json(response);
+  },
+  [
+    FriendValidator.isValidUser,
+    FriendValidator.isViewAllowed
+  ],
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.session.userId as string;
+    const {friend} = req.params;
+    const friendId = (await UserCollection.findOneByUsername(friend))._id;
+    const allFriends = await FriendCollection.findAllFriends(friendId);
     const response = allFriends.map(util.constructFriendResponse);
     res.status(200).json(response);
   }
 );
 
 router.delete(
-  '/:friend?',
+  '/list/:friend?',
   [
     UserValidator.isUserLoggedIn,
     FriendValidator.isValidUser,
@@ -108,8 +125,7 @@ router.post(
     const userId = req.session.userId as string;
     const {requester} = req.params;
     const response = req.body.response as string;
-    const requesterId = (await UserCollection.findOneByUsername(requester))._id;
-    const friendRequest = await FriendRequestCollection.findPendingFriendRequest(requesterId, userId);
+    const requesterId = (await UserCollection.findOneByUsername(requester))._id.toString();
     if (response === 'accept') {
       await Promise.all([
         FriendCollection.addOneFriend(userId, requesterId),
@@ -118,7 +134,7 @@ router.post(
       ]);
     }
 
-    await FriendRequestCollection.updateFriendRequest(requesterId, userId, `${response}ed`);
+    const friendRequest = await FriendRequestCollection.updateFriendRequest(requesterId, userId, `${response}ed`);
 
     res.status(200).json({
       message: `You ${response}ed a friend request from ${requester}.`,

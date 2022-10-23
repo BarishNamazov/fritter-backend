@@ -21,7 +21,7 @@ const constructFriendResponse = (friend: HydratedDocument<Friend>): FriendRespon
   };
   return {
     _id: friendCopy._id.toString(),
-    friendship: friendCopy.friendship.map(user => user._id.toString()) as [string, string],
+    friendship: friendCopy.friendship.map(user => user.username) as [string, string],
     dateFriends: friendCopy.dateFriends
   };
 };

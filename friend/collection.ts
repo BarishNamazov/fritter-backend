@@ -8,6 +8,10 @@ type MongoId = Types.ObjectId | string;
 class FriendCollection {
   static async findOneFriend(friend1: MongoId, friend2: MongoId): Promise<HydratedDocument<Friend>> {
     const friend = await FriendModel.findOne({friendship: {$all: [friend1, friend2]}});
+    if (!friend) {
+      return friend;
+    }
+
     return friend.populate('friendship');
   }
 
@@ -28,13 +32,12 @@ class FriendCollection {
 }
 
 class FriendRequestCollection {
-  static async findOneFriendRequest(requester: MongoId, requestee: MongoId): Promise<HydratedDocument<FriendRequest>> {
-    const friendRequest = await FriendRequestModel.findOne({requester, requestee});
-    return friendRequest.populate(['requester', 'requestee']);
-  }
-
   static async findPendingFriendRequest(requester: MongoId, requestee: MongoId): Promise<HydratedDocument<FriendRequest>> {
     const friendRequest = await FriendRequestModel.findOne({requester, requestee, status: 'pending'});
+    if (!friendRequest) {
+      return friendRequest;
+    }
+
     return friendRequest.populate(['requester', 'requestee']);
   }
 
@@ -53,11 +56,19 @@ class FriendRequestCollection {
 
   static async deleteOneFriendRequest(requester: MongoId, requestee: MongoId): Promise<HydratedDocument<FriendRequest>> {
     const friendRequest = await FriendRequestModel.findOneAndDelete({requester, requestee});
+    if (!friendRequest) {
+      return friendRequest;
+    }
+
     return friendRequest.populate(['requester', 'requestee']);
   }
 
   static async updateFriendRequest(requester: MongoId, requestee: MongoId, status: string): Promise<HydratedDocument<FriendRequest>> {
     const friendRequest = await FriendRequestModel.findOneAndUpdate({requester, requestee}, {status});
+    if (!friendRequest) {
+      return friendRequest;
+    }
+
     return friendRequest.populate(['requester', 'requestee']);
   }
 }

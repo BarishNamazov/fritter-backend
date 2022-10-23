@@ -49,6 +49,7 @@ const formsAndHandlers = {
   'count-followers': countFollowers,
   'get-following-freets': getFollowingFreets,
   'get-friends': getFriends,
+  'get-friends-of': getFriends,
   unfriend,
   'get-friend-requests': getFriendRequests,
   'request-friend': requestFriend,
