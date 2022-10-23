@@ -47,7 +47,13 @@ const formsAndHandlers = {
   'follow-user': follow,
   'unfollow-user': unfollow,
   'count-followers': countFollowers,
-  'get-following-freets': getFollowingFreets
+  'get-following-freets': getFollowingFreets,
+  'get-friends': getFriends,
+  unfriend,
+  'get-friend-requests': getFriendRequests,
+  'request-friend': requestFriend,
+  'withdraw-request': withdrawRequest,
+  'respond-request': respondRequest
 };
 
 // Attach handlers to forms

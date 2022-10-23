@@ -9,6 +9,7 @@
   <script src="/scripts/user.js"></script>
   <script src="/scripts/quickaccess.js"></script>
   <script src="/scripts/follow.js"></script>
+  <script src="/scripts/friend.js"></script>
   <script src="/scripts/index.js"></script>
 </head>
 
@@ -174,6 +175,56 @@ My Freets, https://www.fritter.com/my/freets
           <input type="submit" value="Get your following's freets">
         </form>
 
+        <form id="get-friends">
+          <h3>Get your friends</h3>
+          <input type="submit" name="friend" value="Get your friends">
+        </form>
+
+        <form id="unfriend">
+          <h3>Unfriend someone</h3>
+          <div>
+            <label for="friend">Friend</label>
+            <input id="friend" name="friend"/>
+          </div>
+          <input type="submit" value="Unfriend">
+        </form>
+
+        <form id="get-friend-requests">
+          <h3>Get your friend requests</h3>
+          <input type="submit" name="friend" value="Get your friend requests">
+        </form>
+
+        <form id="request-friend">
+          <h3>Request friendship</h3>
+          <div>
+            <label for="friend">Friend</label>
+            <input id="friend" name="friend"/>
+          </div>
+          <input type="submit" value="Request friendship">
+        </form>
+
+        <form id="withdraw-request">
+          <h3>Withdraw friendship request</h3>
+          <div>
+            <label for="friend">Friend</label>
+            <input id="friend" name="friend"/>
+          </div>
+          <input type="submit" value="Withdraw friendship request">
+        </form>
+
+        <form id="respond-request">
+          <h3>Respond to friendship request</h3>
+          <div>
+            <label for="friend">Friend</label>
+            <input id="friend" name="friend"/>
+          </div>
+          <div style="display: block">
+            <label for="response">Response</label>
+            <input type="radio" name="response" value="accept"/> Accept
+            <input type="radio" name="response" value="reject"/> Reject
+          </div>
+          <input type="submit" value="Respond to friendship request">
+        </form>
       </div>
     </section>
     <section>
