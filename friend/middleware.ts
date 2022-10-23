@@ -1,7 +1,7 @@
 import type {Request, Response, NextFunction} from 'express';
 import {Types} from 'mongoose';
 import {FriendCollection, FriendRequestCollection} from './collection';
-import UserCollection from 'user/collection';
+import UserCollection from '../user/collection';
 
 const getFriendUsername = (params: Record<string, string>) => {
   if (params.friend) {

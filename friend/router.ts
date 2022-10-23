@@ -96,8 +96,8 @@ router.delete(
   }
 );
 
-router.put(
-  '/requests/respond/:requester?',
+router.post(
+  '/requests/:requester?',
   [
     UserValidator.isUserLoggedIn,
     FriendValidator.isValidUser,
@@ -126,3 +126,7 @@ router.put(
     });
   }
 );
+
+export {
+  router as friendRouter
+};
