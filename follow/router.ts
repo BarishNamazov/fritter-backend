@@ -83,7 +83,7 @@ router.get(
     const userId = (req.session.userId as string) ?? '';
     const allFollowing = await FollowCollection.findAllByFollowerId(userId);
     const allFolloweeIds = allFollowing.map(follow => follow.followee._id);
-    const allFreets = await FreetCollection.findAllByUserIds(allFolloweeIds);
+    const allFreets = await FreetCollection.findAllVisibleToUser(userId, {authorId: {$in: allFolloweeIds}});
     const response = allFreets.map(freetUtil.constructFreetResponse);
     res.status(200).json(response);
   }

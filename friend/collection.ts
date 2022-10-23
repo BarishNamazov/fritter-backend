@@ -19,6 +19,12 @@ class FriendCollection {
     return FriendModel.find({friendship: userId}).sort({dateFriends: -1}).populate('friendship');
   }
 
+  static async findAllFriendUsernames(userId: MongoId): Promise<MongoId[]> {
+    const friends = await FriendCollection.findAllFriends(userId);
+    const friendUsernames = friends.map(friend => friend.friendship.find(user => user._id.toString() !== userId.toString())._id);
+    return friendUsernames;
+  }
+
   static async addOneFriend(friend1: MongoId, friend2: MongoId): Promise<HydratedDocument<Friend>> {
     const friend = new FriendModel({friendship: [friend1, friend2], dateFriends: new Date()});
     await friend.save();
