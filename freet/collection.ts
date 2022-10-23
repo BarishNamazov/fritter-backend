@@ -30,7 +30,7 @@ class FreetCollection {
       visibility: freetDetails.visibility
     });
     await freet.save(); // Saves freet to MongoDB
-    return freet.populate('authorId');
+    return freet.populate(['authorId', 'numUpvotes', 'numDownvotes']);
   }
 
   /**
@@ -40,7 +40,7 @@ class FreetCollection {
    * @return {Promise<HydratedDocument<Freet>> | Promise<null> } - The freet with the given freetId, if any
    */
   static async findOne(freetId: Types.ObjectId | string): Promise<HydratedDocument<Freet>> {
-    return FreetModel.findOne({_id: freetId}).populate('authorId');
+    return FreetModel.findOne({_id: freetId}).populate(['authorId', 'numUpvotes', 'numDownvotes']);
   }
 
   /**
@@ -50,7 +50,7 @@ class FreetCollection {
    */
   static async findAll(filter: Record<string, any> = {}): Promise<Array<HydratedDocument<Freet>>> {
     // Retrieves freets and sorts them from most to least recent
-    return FreetModel.find(filter).sort({dateModified: -1}).populate('authorId');
+    return FreetModel.find(filter).sort({dateModified: -1}).populate(['authorId', 'numUpvotes', 'numDownvotes']);
   }
 
   /**
@@ -61,7 +61,7 @@ class FreetCollection {
    */
   static async findAllByUsername(username: string): Promise<Array<HydratedDocument<Freet>>> {
     const author = await UserCollection.findOneByUsername(username);
-    return FreetModel.find({authorId: author._id}).populate('authorId');
+    return FreetModel.find({authorId: author._id}).populate(['authorId', 'numUpvotes', 'numDownvotes']);
   }
 
   /**
@@ -70,7 +70,7 @@ class FreetCollection {
    * @returns {Promise<HydratedDocument<Freet>[]>} - An array of all of the freets
    */
   static async findAllByUserIds(userIds: Array<Types.ObjectId | string>, filter: Record<string, any>): Promise<Array<HydratedDocument<Freet>>> {
-    return FreetModel.find({authorId: {$in: userIds}, ...filter}).populate('authorId');
+    return FreetModel.find({authorId: {$in: userIds}, ...filter}).populate(['authorId', 'numUpvotes', 'numDownvotes']);
   }
 
   static async findAllVisibleToUser(userId: Types.ObjectId | string, filter: Record<string, any> = {}): Promise<Array<HydratedDocument<Freet>>> {
@@ -101,7 +101,7 @@ class FreetCollection {
 
     freet.dateModified = new Date();
     await freet.save();
-    return freet.populate('authorId');
+    return freet.populate(['authorId', 'numUpvotes', 'numDownvotes']);
   }
 
   /**

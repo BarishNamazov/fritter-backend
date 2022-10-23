@@ -9,6 +9,8 @@ type FreetResponse = {
   dateCreated: string;
   content: string;
   dateModified: string;
+  numUpvotes: number;
+  numDownvotes: number;
 };
 
 /**
@@ -29,9 +31,11 @@ const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:
 const constructFreetResponse = (freet: HydratedDocument<Freet>): FreetResponse => {
   const freetCopy: PopulatedFreet = {
     ...freet.toObject({
-      versionKey: false // Cosmetics; prevents returning of __v property
+      versionKey: false, // Cosmetics; prevents returning of __v property
+      virtuals: true // Allows for virtual properties to be returned
     })
   };
+  console.log(freet.toObject({virtuals: true}));
   const {username} = freetCopy.authorId;
   delete freetCopy.authorId;
   return {
