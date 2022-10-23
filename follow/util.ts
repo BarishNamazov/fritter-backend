@@ -3,6 +3,7 @@ import moment from 'moment';
 import type {Follow, PopulatedFollow} from './model';
 
 type FollowResponse = {
+  _id: string;
   followerUsername: string;
   followeeUsername: string;
   dateFollowing: Date;
@@ -22,6 +23,7 @@ const constructFollowResponse = (follow: HydratedDocument<Follow>): FollowRespon
   const followerUsername = followCopy.follower.username;
   const followeeUsername = followCopy.followee.username;
   return {
+    _id: followCopy._id.toString(),
     followerUsername,
     followeeUsername,
     dateFollowing: followCopy.dateFollowing

@@ -16,6 +16,15 @@ class FollowCollection {
     return follow.populate(['follower', 'followee']);
   }
 
+  static async addOneIfNotExists(follower: MongoId, followee: MongoId): FollowPromise {
+    const follow = await this.findOneByUserIds(follower, followee);
+    if (follow) {
+      return follow;
+    }
+
+    return this.addOne(follower, followee);
+  }
+
   static async findOneById(followId: MongoId): FollowPromise {
     return FollowModel.findOne({_id: followId}).populate(['follower', 'followee']);
   }
@@ -50,6 +59,15 @@ class FollowCollection {
   static async deleteOneByUserIds(follower: MongoId, followee: MongoId): Promise<boolean> {
     const follow = await FollowModel.findOne({follower, followee});
     return this.deleteOneById(follow._id);
+  }
+
+  static async deleteOneIfFollows(follower: MongoId, followee: MongoId): Promise<boolean> {
+    const follow = await this.findOneByUserIds(follower, followee);
+    if (follow) {
+      return this.deleteOneById(follow._id);
+    }
+
+    return false;
   }
 
   static async countFollowers(followeeUsername: string): Promise<number> {
