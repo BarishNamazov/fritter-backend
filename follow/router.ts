@@ -1,9 +1,11 @@
 import type {NextFunction, Request, Response} from 'express';
 import express from 'express';
 import FollowCollection from './collection';
+import FreetCollection from '../freet/collection';
 import UserCollection from '../user/collection';
 import * as userValidator from '../user/middleware';
 import * as util from './util';
+import * as freetUtil from '../freet/util';
 import * as followValidator from './middleware';
 
 const router = express.Router();
@@ -69,6 +71,21 @@ router.get(
       username: followee,
       followerCount: await FollowCollection.countFollowers(followee)
     });
+  }
+);
+
+router.get(
+  '/freets',
+  [
+    userValidator.isUserLoggedIn
+  ],
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = (req.session.userId as string) ?? '';
+    const allFollowing = await FollowCollection.findAllByFollowerId(userId);
+    const allFolloweeIds = allFollowing.map(follow => follow.followee._id);
+    const allFreets = await FreetCollection.findAllByUserIds(allFolloweeIds);
+    const response = allFreets.map(freetUtil.constructFreetResponse);
+    res.status(200).json(response);
   }
 );
 

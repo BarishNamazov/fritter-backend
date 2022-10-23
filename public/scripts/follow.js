@@ -14,3 +14,7 @@ function unfollow(fields) {
 function countFollowers(fields) {
   fetch(`/api/follows/count/${fields.followee}`).then(showResponse).catch(showResponse);
 }
+
+function getFollowingFreets(fields) {
+  fetch('/api/follows/freets').then(showResponse).catch(showResponse);
+}

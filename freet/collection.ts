@@ -62,6 +62,10 @@ class FreetCollection {
     return FreetModel.find({authorId: author._id}).populate('authorId');
   }
 
+  static async findAllByUserIds(userIds: Array<Types.ObjectId | string>): Promise<Array<HydratedDocument<Freet>>> {
+    return FreetModel.find({authorId: {$in: userIds}}).populate('authorId');
+  }
+
   /**
    * Update a freet with the new content
    *
