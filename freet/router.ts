@@ -1,6 +1,7 @@
 import type {NextFunction, Request, Response} from 'express';
 import express from 'express';
 import FreetCollection from './collection';
+import UserCollection from '../user/collection';
 import * as userValidator from '../user/middleware';
 import * as freetValidator from '../freet/middleware';
 import * as util from './util';
@@ -49,8 +50,9 @@ router.get(
   ],
   async (req: Request, res: Response) => {
     let authorFreets;
+    const author = await UserCollection.findOneByUsername(req.query.author as string);
     if (req.session.userId) {
-      authorFreets = await FreetCollection.findAllVisibleToUser(req.session.userId, {authorId: req.query.author});
+      authorFreets = await FreetCollection.findAllVisibleToUser(req.session.userId as string, {authorId: author._id});
     } else {
       authorFreets = await FreetCollection.findAll({visibility: 'public', authorId: req.query.author});
     }

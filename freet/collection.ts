@@ -76,9 +76,9 @@ class FreetCollection {
   static async findAllVisibleToUser(userId: Types.ObjectId | string, filter: Record<string, any> = {}): Promise<Array<HydratedDocument<Freet>>> {
     const friendIds = await FriendCollection.findAllFriendUsernames(userId);
     return this.findAll({$or: [
-      {visibility: 'public', ...filter},
-      {authorId: {$in: friendIds}, visibility: 'friends', ...filter},
-      {authorId: userId, visibility: 'only me', ...filter}
+      {...filter, visibility: 'public'},
+      {...filter, authorId: {$in: friendIds.concat([userId])}, visibility: 'friends'},
+      {...filter, authorId: userId, visibility: 'only me'}
     ]});
   }
 

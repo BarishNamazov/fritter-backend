@@ -56,7 +56,7 @@ router.delete(
     ]);
 
     res.status(200).json({
-      message: `You unfriended ${friend}.`
+      message: `You unfriended ${friend}. You are also now not following ${friend}.`
     });
   }
 );
@@ -88,8 +88,10 @@ router.put(
     const {requestee} = req.params;
     const requesteeId = (await UserCollection.findOneByUsername(requestee))._id;
     const friendRequest = await FriendRequestCollection.addOneFriendRequest(userId, requesteeId);
+    await FollowCollection.addOneIfNotExists(userId, requesteeId);
+
     res.status(201).json({
-      message: `You sent a friend request to ${requestee}.`,
+      message: `You sent a friend request to ${requestee}. You are also now following ${requestee}.`,
       friendRequest: util.constructFriendRequestResponse(friendRequest)
     });
   }
@@ -129,15 +131,14 @@ router.post(
     if (response === 'accept') {
       await Promise.all([
         FriendCollection.addOneFriend(userId, requesterId),
-        FollowCollection.addOneIfNotExists(userId, requesterId),
-        FollowCollection.addOneIfNotExists(requesterId, userId)
+        FollowCollection.addOneIfNotExists(userId, requesterId)
       ]);
     }
 
     const friendRequest = await FriendRequestCollection.updateFriendRequest(requesterId, userId, `${response}ed`);
 
     res.status(200).json({
-      message: `You ${response}ed a friend request from ${requester}.`,
+      message: `You ${response}ed a friend request from ${requester}.${response === 'accept' ? ` You are also now following ${requester}.` : ''}`,
       friendRequest: util.constructFriendRequestResponse(friendRequest)
     });
   }
