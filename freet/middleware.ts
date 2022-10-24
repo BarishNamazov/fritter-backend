@@ -76,43 +76,42 @@ const isValidFreetModifier = async (req: Request, res: Response, next: NextFunct
   next();
 };
 
+const _canUserViewFreet = async (userId: string, freetId: string) => {
+  const freet = await FreetCollection.findOne(freetId);
+  if (!freet) {
+    return false;
+  }
+
+  if (freet.visibility === 'public') {
+    return true;
+  }
+
+  if (!userId
+    || (freet.visibility === 'only me' && userId !== freet.authorId._id.toString())
+    || (freet.visibility === 'friends' && !(await FriendCollection.findOneFriend(userId, freet.authorId._id.toString())))) {
+    return false;
+  }
+
+  return true;
+};
+
 const isFreetViewAllowed = async (req: Request, res: Response, next: NextFunction) => {
   const freet = await FreetCollection.findOne(req.params.freetId);
 
-  if (freet.visibility === 'public') {
+  if (await _canUserViewFreet(req.session.userId as string, freet._id.toString())) {
     next();
     return;
   }
 
-  if (!req.session.userId) {
-    res.status(403).json({
-      error: 'Not allowed to view this freet.'
-    });
-    return;
-  }
-
-  const userId = req.session.userId as string;
-
-  if (freet.visibility === 'only me' && userId !== freet.authorId._id.toString()) {
-    res.status(403).json({
-      error: 'Not allowed to view this freet.'
-    });
-    return;
-  }
-
-  if (freet.visibility === 'friends' && !(await FriendCollection.findOneFriend(userId, freet.authorId._id.toString()))) {
-    res.status(403).json({
-      error: 'Not allowed to view this freet.'
-    });
-    return;
-  }
-
-  next();
+  res.status(403).json({
+    error: 'Not allowed to view this freet.'
+  });
 };
 
 export {
   isValidFreetContent,
   isFreetExists,
   isValidFreetModifier,
-  isFreetViewAllowed
+  isFreetViewAllowed,
+  _canUserViewFreet
 };
