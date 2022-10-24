@@ -11,6 +11,7 @@
   <script src="/scripts/follow.js"></script>
   <script src="/scripts/friend.js"></script>
   <script src="/scripts/upvote.js"></script>
+  <script src="/scripts/takebreak.js"></script>
   <script src="/scripts/index.js"></script>
 </head>
 
@@ -281,6 +282,50 @@ My Freets, https://www.fritter.com/my/freets
           <h3>Get comments and freets that you have voted</h3>
           <input type="submit" value="Get your votes">
         </form>
+
+        <form id="start-break">
+          <h3>Create Freet for starting a break</h3>
+          <div>
+            <label for="content">Content:</label>
+            <textarea id="content" name="content"></textarea>
+          </div>
+          <div>
+            Choose a visibility:
+            <select name="visibility">
+              <option value="public">Public</option>
+              <option value="friends">Friends</option>
+              <option value="only me">Only me</option>
+            </select>
+          </div>
+          <input type="submit" value="Start Break">
+        </form>
+        <form id="end-break">
+
+          <h3>Enter user details and make freet for ending your break</h3>
+          <div>
+            <label for="username">Username:</label>
+            <input id="username" name="username">
+          </div>
+          <div>
+            <label for="password">Password:</label>
+            <input id="password" name="password">
+          </div>
+
+          <div>
+            <label for="content">Freet Content:</label>
+            <textarea id="content" name="content"></textarea>
+          </div>
+          <div>
+            Choose a visibility:
+            <select name="visibility">
+              <option value="public">Public</option>
+              <option value="friends">Friends</option>
+              <option value="only me">Only me</option>
+            </select>
+          </div>
+          <input type="submit" value="End Break">
+        </form>
+
       </div>
     </section>
     <section>

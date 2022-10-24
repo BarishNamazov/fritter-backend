@@ -165,7 +165,7 @@ const isAuthorExists = async (req: Request, res: Response, next: NextFunction) =
 };
 
 const isNotTakingBreak = async (req: Request, res: Response, next: NextFunction) => {
-  const user = await ((await UserCollection.findOneByUserId(req.session.userId)).populate('currentTakeBreak'));
+  const user = await ((await UserCollection.findOneByUsername(req.body.username)).populate('currentTakeBreak'));
   if (user.currentTakeBreak) {
     res.status(403).json({
       error: 'You are currently taking a break.'

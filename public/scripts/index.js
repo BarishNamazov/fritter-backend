@@ -57,7 +57,9 @@ const formsAndHandlers = {
   'respond-request': respondRequest,
   'vote-thing': voteFreet,
   'unvote-thing': unvoteFreet,
-  'my-votes': myVotes
+  'my-votes': myVotes,
+  'start-break': startBreak,
+  'end-break': endBreak
 };
 
 // Attach handlers to forms

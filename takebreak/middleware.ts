@@ -18,7 +18,7 @@ const isNotTakingBreak = async (req: Request, res: Response, next: NextFunction)
 };
 
 const isTakingBreak = async (req: Request, res: Response, next: NextFunction) => {
-  const user = await ((await UserCollection.findOneByUserId(req.body.username)).populate('currentTakeBreak'));
+  const user = await ((await UserCollection.findOneByUsername(req.body.username)).populate('currentTakeBreak'));
   if (!user.currentTakeBreak) {
     res.status(409).json({
       error: 'You are already not taking a break right now.'

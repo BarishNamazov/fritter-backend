@@ -14,6 +14,7 @@ import {upvoteRouter} from '../upvote/router';
 import {followRouter} from '../follow/router';
 import {quickAccessRouter} from '../quickaccess/router';
 import {friendRouter} from '../friend/router';
+import {takeBreakRouter} from '../takebreak/router';
 import {MONGO_SRV, PORT} from '../global';
 
 // Connect to mongoDB
@@ -75,6 +76,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 // Add routers from routes folder
+app.use('/api/takebreaks', takeBreakRouter);
 app.use('/api/users', userRouter);
 app.use('/api/upvotes', upvoteRouter);
 app.use('/api/freets', freetRouter);
@@ -84,7 +86,7 @@ app.use('/api/quickaccess', quickAccessRouter);
 
 // Catch all the other routes and display error message
 app.all('*', (req: Request, res: Response) => {
-  res.status(400).render('error');
+  res.status(400).json({error: 'Invalid route.'});
 });
 
 // Create server to listen to request at specified port

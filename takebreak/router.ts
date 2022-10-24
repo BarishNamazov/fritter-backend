@@ -9,6 +9,7 @@ import * as util from './util';
 import * as freetUtil from '../freet/util';
 
 import FreetCollection from '../freet/collection';
+import UserCollection from '../user/collection';
 import type {PopulatedTakeBreak} from './model';
 
 const router = express.Router();
@@ -42,10 +43,10 @@ router.put(
     freetValidator.isValidFreetContent
   ],
   async (req: Request, res: Response, next: NextFunction) => {
-    const userId = req.session.userId as string;
-    const takeBreak = await TakeBreakCollection.endBreak(userId);
-    const freet = await FreetCollection.addOne(userId, req.body);
-    req.session.userId = userId;
+    const user = await UserCollection.findOneByUsername(req.body.username);
+    const takeBreak = await TakeBreakCollection.endBreak(user._id);
+    const freet = await FreetCollection.addOne(user._id, req.body);
+    req.session.userId = user._id;
     res.status(201).json({
       message: 'You have ended your break and logged in.',
       freet: freetUtil.constructFreetResponse(freet),
