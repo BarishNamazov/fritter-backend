@@ -38,7 +38,7 @@ const isCommentExists = async (req: Request, res: Response, next: NextFunction) 
   next();
 };
 
-const isValidCommentModified = async (req: Request, res: Response, next: NextFunction) => {
+const isValidCommentModifier = async (req: Request, res: Response, next: NextFunction) => {
   const comment = await CommentCollection.findOne(req.params.commentId);
   const authorId = comment.authorId._id.toString();
   if ((req.session.userId as string) !== authorId) {
@@ -75,6 +75,6 @@ const isCommentAccessible = async (req: Request, res: Response, next: NextFuncti
 export {
   isValidCommentContent,
   isCommentExists,
-  isValidCommentModified,
+  isValidCommentModifier,
   isCommentAccessible
 };

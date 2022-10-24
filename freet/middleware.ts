@@ -3,6 +3,29 @@ import {Types} from 'mongoose';
 import {FriendCollection} from '../friend/collection';
 import FreetCollection from '../freet/collection';
 
+const isFreetExistsQuery = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.query.freetId) {
+    res.status(400).json({
+      error: 'Missing freet id.'
+    });
+    return;
+  }
+
+  const freetId = req.query.freetId as string;
+  const validFormat = Types.ObjectId.isValid(freetId);
+  const freet = validFormat ? await FreetCollection.findOne(freetId) : '';
+  if (!freet) {
+    res.status(404).json({
+      error: {
+        freetNotFound: `Freet with freet ID ${freetId} does not exist.`
+      }
+    });
+    return;
+  }
+
+  next();
+};
+
 /**
  * Checks if a freet with freetId is req.params exists
  */
@@ -111,6 +134,7 @@ const isFreetViewAllowed = async (req: Request, res: Response, next: NextFunctio
 export {
   isValidFreetContent,
   isFreetExists,
+  isFreetExistsQuery,
   isValidFreetModifier,
   isFreetViewAllowed,
   _canUserViewFreet

@@ -10,7 +10,8 @@ import FreetCollection from '../freet/collection';
 type MongoId = Types.ObjectId | string;
 
 class CommentCollection {
-  static async addOne(authorId: MongoId, freetId: MongoId, commentDetails: Record<string, string>): Promise<HydratedDocument<Comment>> {
+  // eslint-disable-next-line max-params
+  static async addOne(authorId: MongoId, freetId: MongoId, replyToId: MongoId, replyToModel: 'Comment' | 'Freet', commentDetails: Record<string, string>): Promise<HydratedDocument<Comment>> {
     const date = new Date();
     const comment = new CommentModel({
       authorId,
@@ -29,6 +30,12 @@ class CommentCollection {
 
   static async findAll(filter: Record<string, any> = {}): Promise<Array<HydratedDocument<Comment>>> {
     return CommentModel.find(filter).sort({dateModified: -1}).populate(['authorId', 'freetId']);
+  }
+
+  static async findAllVisibleToUser(userId: MongoId, filter: Record<string, any> = {}): Promise<Array<HydratedDocument<Comment>>> {
+    const freets = await FreetCollection.findAllVisibleToUser(userId);
+    const freetIds = freets.map(freet => freet._id);
+    return CommentCollection.findAll({...filter, freetId: {$in: freetIds}});
   }
 
   static async updateOne(commentId: MongoId, commentDetails: Record<string, string>): Promise<HydratedDocument<Comment>> {
