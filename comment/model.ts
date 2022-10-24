@@ -11,6 +11,9 @@ export type Comment = {
   content: string;
   dateModified: Date;
   freetId: Types.ObjectId;
+  replyToId: Types.ObjectId;
+  replyToModel: 'Comment' | 'Freet';
+
   numUpvotes: number;
   numDownvotes: number;
 };
@@ -22,6 +25,9 @@ export type PopulatedComment = {
   content: string;
   dateModified: Date;
   freetId: Freet;
+  replyToId: Comment | Freet;
+  replyToModel: 'Comment' | 'Freet';
+
   numUpvotes: number;
   numDownvotes: number;
 };
@@ -48,6 +54,16 @@ const CommentSchema = new Schema<Comment>({
     type: Schema.Types.ObjectId,
     required: true,
     ref: 'Freet'
+  },
+  replyToId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    refPath: 'replyToModel'
+  },
+  replyToModel: {
+    type: String,
+    required: true,
+    enum: ['Comment', 'Freet']
   }
 });
 
