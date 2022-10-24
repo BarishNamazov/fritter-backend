@@ -35,5 +35,15 @@ const UserSchema = new Schema({
   }
 });
 
+UserSchema.virtual('currentTakeBreak', {
+  ref: 'TakeBreak',
+  localField: '_id',
+  foreignField: 'userId',
+  justOne: true,
+  match: {
+    dateEnd: null
+  }
+});
+
 const UserModel = model<User>('User', UserSchema);
 export default UserModel;
