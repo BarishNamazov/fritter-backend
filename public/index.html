@@ -250,6 +250,36 @@ My Freets, https://www.fritter.com/my/freets
           </div>
           <input type="submit" value="Respond to friendship request">
         </form>
+
+
+
+        <form id="vote-thing">
+          <h3>Vote on a freet or comment</h3>
+          <div>
+            <label for="id">ID (Freet or Comment)</label>
+            <input id="id" name="id"/>
+          </div>
+          <div style="display: block">
+            <label for="vote">Vote</label>
+            <input type="radio" name="vote" value="upvote"/> Upvote
+            <input type="radio" name="vote" value="downvote"/> Downvote
+          </div>
+          <input type="submit" value="Vote">
+        </form>
+
+        <form id="unvote-thing">
+          <h3>Unvote on a freet or comment</h3>
+          <div>
+            <label for="id">ID (Freet or Comment)</label>
+            <input id="id" name="id"/>
+          </div>
+          <input type="submit" value="Take vote back">
+        </form>
+
+        <form id="get-votes">
+          <h3>Get comments and freets that you have voted</h3>
+          <input type="submit" value="Get your votes">
+        </form>
       </div>
     </section>
     <section>

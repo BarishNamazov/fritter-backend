@@ -54,7 +54,10 @@ const formsAndHandlers = {
   'get-friend-requests': getFriendRequests,
   'request-friend': requestFriend,
   'withdraw-request': withdrawRequest,
-  'respond-request': respondRequest
+  'respond-request': respondRequest,
+  'vote-thing': voteFreet,
+  'unvote-thing': unvoteFreet,
+  'my-votes': myVotes
 };
 
 // Attach handlers to forms
