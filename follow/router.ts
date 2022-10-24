@@ -80,10 +80,10 @@ router.get(
     userValidator.isUserLoggedIn
   ],
   async (req: Request, res: Response, next: NextFunction) => {
-    const userId = (req.session.userId as string) ?? '';
+    const {userId} = req.session;
     const allFollowing = await FollowCollection.findAllByFollowerId(userId);
     const allFolloweeIds = allFollowing.map(follow => follow.followee._id);
-    const allFreets = await FreetCollection.findAllVisibleToUser(userId, {authorId: {$in: allFolloweeIds}});
+    const allFreets = await FreetCollection.findAllVisibleToUser(userId, {authorId: {$in: allFolloweeIds.concat([userId])}});
     const response = allFreets.map(freetUtil.constructFreetResponse);
     res.status(200).json(response);
   }
