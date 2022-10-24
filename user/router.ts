@@ -27,7 +27,8 @@ router.post(
     userValidator.isUserLoggedOut,
     userValidator.isValidUsername,
     userValidator.isValidPassword,
-    userValidator.isAccountExists
+    userValidator.isAccountExists,
+    userValidator.isNotTakingBreak
   ],
   async (req: Request, res: Response) => {
     const user = await UserCollection.findOneByUsernameAndPassword(

@@ -1,6 +1,6 @@
 import type {Request, Response, NextFunction} from 'express';
-import {FriendCollection} from '../friend/collection';
 import {Types} from 'mongoose';
+import {FriendCollection} from '../friend/collection';
 import FreetCollection from '../freet/collection';
 
 /**

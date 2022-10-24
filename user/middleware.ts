@@ -20,6 +20,17 @@ const isCurrentSessionUserExists = async (req: Request, res: Response, next: Nex
       });
       return;
     }
+
+    const populatedUser = await user.populate('currentTakeBreak');
+    if (populatedUser.currentTakeBreak) {
+      req.session.userId = undefined;
+      res.status(500).json({
+        error: {
+          userNotFound: 'This user is now taking a break.'
+        }
+      });
+      return;
+    }
   }
 
   next();
@@ -153,6 +164,18 @@ const isAuthorExists = async (req: Request, res: Response, next: NextFunction) =
   next();
 };
 
+const isNotTakingBreak = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await ((await UserCollection.findOneByUserId(req.session.userId)).populate('currentTakeBreak'));
+  if (user.currentTakeBreak) {
+    res.status(403).json({
+      error: 'You are currently taking a break.'
+    });
+    return;
+  }
+
+  next();
+};
+
 export {
   isCurrentSessionUserExists,
   isUserLoggedIn,
@@ -161,5 +184,6 @@ export {
   isAccountExists,
   isAuthorExists,
   isValidUsername,
-  isValidPassword
+  isValidPassword,
+  isNotTakingBreak
 };
