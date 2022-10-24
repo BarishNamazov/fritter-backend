@@ -10,23 +10,9 @@ import * as upvoteValidator from './middleware';
 const router = express.Router();
 
 router.get(
-  '/freet/:freetId',
-  [
-    freetValidator.isFreetExists,
-    freetValidator.isFreetViewAllowed
-  ],
-  async (req: Request, res: Response, next: NextFunction) => {
-    const freet = await FreetCollection.findOne(req.params.freetId);
-    res.status(200).json({upvotes: freet.numUpvotes, downvotes: freet.numDownvotes});
-  }
-);
-
-router.get(
   '/my',
   [
-    userValidator.isUserLoggedIn,
-    freetValidator.isFreetExists,
-    freetValidator.isFreetViewAllowed
+    userValidator.isUserLoggedIn
   ],
   async (req: Request, res: Response, next: NextFunction) => {
     const freets = await UpvoteCollection.findAll({userId: req.session.userId as string, onModel: 'Freet'});
@@ -36,7 +22,7 @@ router.get(
 );
 
 router.put(
-  '/freet/:freetId',
+  '/freet/:freetId?',
   [
     userValidator.isUserLoggedIn,
     freetValidator.isFreetExists,

@@ -18,11 +18,11 @@ class UpvoteCollection {
   }
 
   static async findOne(userId: MongoId, itemId: MongoId, onModel: 'Freet' | 'Comment'): Promise<HydratedDocument<Upvote>> {
-    return UpvoteModel.findOne({userId, itemId, onModel}).populate('userId');
+    return UpvoteModel.findOne({userId, itemId, onModel}).populate('itemId');
   }
 
   static async findAll(filter: Record<string, string> = {}): Promise<Array<HydratedDocument<Upvote>>> {
-    return UpvoteModel.find(filter).populate('userId');
+    return UpvoteModel.find(filter).populate('itemId');
   }
 
   static async deleteOneById(upvoteId: MongoId): Promise<void> {
@@ -41,7 +41,7 @@ class UpvoteCollection {
   }
 
   static async getUpvotes(itemId: MongoId, onModel: 'Freet' | 'Comment'): Promise<Array<HydratedDocument<Upvote>>> {
-    return UpvoteModel.find({itemId, onModel, vote: 'upvote'}).populate('userId');
+    return UpvoteModel.find({itemId, onModel, vote: 'upvote'}).populate('itemId');
   }
 
   static async getVotes(itemId: MongoId, onModel: 'Freet' | 'Comment'): Promise<[number, number]> {

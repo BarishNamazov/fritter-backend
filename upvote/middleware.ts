@@ -26,7 +26,10 @@ const isUpvoteExists = async (req: Request, res: Response, next: NextFunction) =
 };
 
 const isUpvoteValid = async (req: Request, res: Response, next: NextFunction) => {
-  if (!req.body.vote || (req.body.vote !== 'upvote' && req.body.vote !== 'downvote')) {
+  console.log(req.body);
+  const vote = req.body.vote as string;
+  console.log(vote);
+  if (!vote || (vote !== 'upvote' && vote !== 'downvote')) {
     res.status(400).json({
       error: 'Invalid vote.'
     });

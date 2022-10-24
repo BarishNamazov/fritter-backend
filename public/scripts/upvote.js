@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 function voteFreet(fields) {
-  fetch(`/api/upvotes/${fields.vote}/freet/${fields.freetId}`, {method: 'PUT'}).then(showResponse).catch(showResponse);
+  console.log(fields);
+  fetch(`/api/upvotes/freet/${fields.id}`, {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}}).then(showResponse).catch(showResponse);
 }
 
 function unvoteFreet(fields) {
-  fetch(`/api/upvotes/freet/${fields.freetId}`, {method: 'DELETE'}).then(showResponse).catch(showResponse);
+  fetch(`/api/upvotes/freet/${fields.id}`, {method: 'DELETE'}).then(showResponse).catch(showResponse);
 }
 
 function myVotes(fields) {
