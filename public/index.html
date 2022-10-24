@@ -12,6 +12,7 @@
   <script src="/scripts/friend.js"></script>
   <script src="/scripts/upvote.js"></script>
   <script src="/scripts/takebreak.js"></script>
+  <script src="/scripts/comment.js"></script>
   <script src="/scripts/index.js"></script>
 </head>
 
@@ -137,6 +138,59 @@
             <input id="id" name="id">
           </div>
           <input type="submit" value="Delete Freet">
+        </form>
+
+        <form id="get-comments">
+          <h3>Get Comments</h3>
+          <div>
+            <label for="id">Author username (empty for all):</label>
+            <input id="id" name="author">
+          </div>
+          <div>
+            <label for="id">Freet ID (empty for all):</label>
+            <input id="id" name="freetId">
+          </div>
+          <input type="submit" value="Get Comments">
+        </form>
+
+        <form id="create-comment">
+          <h3>Create Comment</h3>
+          <div style="display: block;">
+            <label for="replyTo">Commenting on</label>
+            <input type="radio" name="replyTo" value="freet" checked/> Freet
+            <input type="radio" name="replyTo" value="comment"/> Comment
+          </div>
+          <div>
+            <label for="id">ID of above:</label>
+            <input id="id" name="id">
+          </div>
+          <div>
+            <label for="content">Content</label>
+            <textarea id="content" name="content"></textarea>
+          </div>
+          <input type="submit" value="Create comment">
+        </form>
+
+        <form id="edit-comment">
+          <h3>Edit Comment</h3>
+          <div>
+            <label for="id">Comment ID:</label>
+            <input id="id" name="id">
+          </div>
+          <div>
+            <label for="content">Content:</label>
+            <textarea id="content" name="content"></textarea>
+          </div>
+          <input type="submit" value="Edit Comment">
+        </form>
+
+        <form id="delete-comment">
+          <h3>Delete Comment</h3>
+          <div>
+            <label for="id">Comment ID:</label>
+            <input id="id" name="id">
+          </div>
+          <input type="submit" value="Delete Comment">
         </form>
 
         <form id="get-quickaccess">

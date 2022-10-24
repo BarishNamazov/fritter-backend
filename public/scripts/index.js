@@ -59,7 +59,11 @@ const formsAndHandlers = {
   'unvote-thing': unvoteFreet,
   'my-votes': myVotes,
   'start-break': startBreak,
-  'end-break': endBreak
+  'end-break': endBreak,
+  'get-comments': getComments,
+  'create-comment': createComment,
+  'edit-comment': editComment,
+  'delete-comment': deleteComment
 };
 
 // Attach handlers to forms
