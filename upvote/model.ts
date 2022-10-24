@@ -1,3 +1,4 @@
+import type {Freet} from 'freet/model';
 import type {Types, PopulatedDoc, Document} from 'mongoose';
 import {Schema, model} from 'mongoose';
 import type {User} from '../user/model';
@@ -14,7 +15,7 @@ export type Upvote = {
 export type PopulatedUpvote = {
   _id: Types.ObjectId;
   userId: User;
-  itemId: Types.ObjectId;
+  itemId: Freet | Comment;
   dateVoted: Date;
   vote: 'upvote' | 'downvote';
   onModel: 'Freet' | 'Comment';

@@ -21,6 +21,14 @@ class UpvoteCollection {
     return UpvoteModel.findOne({userId, itemId, onModel}).populate('userId');
   }
 
+  static async findAll(filter: Record<string, string> = {}): Promise<Array<HydratedDocument<Upvote>>> {
+    return UpvoteModel.find(filter).populate('userId');
+  }
+
+  static async deleteOneById(upvoteId: MongoId): Promise<void> {
+    await UpvoteModel.deleteOne({_id: upvoteId});
+  }
+
   static async deleteOne(userId: MongoId, itemId: MongoId, onModel: 'Freet' | 'Comment'): Promise<void> {
     await UpvoteModel.deleteOne({userId, itemId, onModel});
   }
@@ -42,3 +50,5 @@ class UpvoteCollection {
     return [upvotes.length, downvotes.length];
   }
 }
+
+export default UpvoteCollection;
