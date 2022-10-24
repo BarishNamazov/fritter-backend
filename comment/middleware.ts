@@ -25,12 +25,24 @@ const isCommentExists = async (req: Request, res: Response, next: NextFunction) 
     return;
   }
 
+  if (!Types.ObjectId.isValid(req.params.commentId)) {
+    res.status(400).json({
+      error: 'Invalid comment id.'
+    });
+    return;
+  }
+
   const comment = await CommentCollection.findOne(req.params.commentId);
   if (!comment) {
     res.status(404).json({
-      error: {
-        commentNotFound: `Comment with comment ID ${req.params.commentId} does not exist.`
-      }
+      error: `Comment with comment ID ${req.params.commentId} does not exist.`
+    });
+    return;
+  }
+
+  if (!comment.authorId) {
+    res.status(403).json({
+      error: 'This comment has been deleted.'
     });
     return;
   }

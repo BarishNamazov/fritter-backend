@@ -6,7 +6,7 @@ import type {Freet} from '../freet/model';
 
 export type Comment = {
   _id: Types.ObjectId;
-  authorId: Types.ObjectId;
+  authorId?: Types.ObjectId;
   dateCreated: Date;
   content: string;
   dateModified: Date;
@@ -20,7 +20,7 @@ export type Comment = {
 
 export type PopulatedComment = {
   _id: Types.ObjectId;
-  authorId: User;
+  authorId?: User;
   dateCreated: Date;
   content: string;
   dateModified: Date;
@@ -35,7 +35,7 @@ export type PopulatedComment = {
 const CommentSchema = new Schema<Comment>({
   authorId: {
     type: Schema.Types.ObjectId,
-    required: true,
+    required: false,
     ref: 'User'
   },
   dateCreated: {

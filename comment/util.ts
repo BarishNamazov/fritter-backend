@@ -22,7 +22,14 @@ const constructCommentResponse = (comment: HydratedDocument<Comment>): CommentRe
       virtuals: true
     })
   };
-  const {username} = commentCopy.authorId;
+
+  let username;
+  if (commentCopy.authorId) {
+    username = commentCopy.authorId.username;
+  } else {
+    username = '[comment deleted]';
+  }
+
   const freetId = commentCopy.freetId._id.toString();
   delete commentCopy.authorId;
   delete commentCopy.freetId;

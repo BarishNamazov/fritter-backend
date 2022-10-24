@@ -10,6 +10,7 @@ import * as freetValidator from '../freet/middleware';
 import * as userValidator from '../user/middleware';
 
 import * as util from './util';
+import type {PopulatedComment} from './model';
 
 const router = express.Router();
 
@@ -83,7 +84,7 @@ router.post(
   ],
   async (req: Request, res: Response) => {
     const userId = req.session.userId as string;
-    const comment = await CommentCollection.addOne(userId, req.params.freetId, req.params.freetId, 'Freet', req.body.content);
+    const comment = await CommentCollection.addOne(userId, req.params.freetId, req.params.freetId, 'Freet', req.body);
     res.status(201).json({
       message: `Comment successfully added to freet with id ${req.params.freetId}.`,
       comment: util.constructCommentResponse(comment)
@@ -102,7 +103,7 @@ router.post(
   async (req: Request, res: Response) => {
     const userId = req.session.userId as string;
     const replyToComment = await CommentCollection.findOne(req.params.commentId);
-    const comment = await CommentCollection.addOne(userId, replyToComment.freetId, req.params.commentId, 'Comment', req.body.content);
+    const comment = await CommentCollection.addOne(userId, replyToComment.freetId, req.params.commentId, 'Comment', req.body);
     res.status(201).json({
       message: `Comment successfully added to comment with id ${req.params.commentId}.`,
       comment: util.constructCommentResponse(comment)
@@ -137,9 +138,13 @@ router.delete(
     commentValidator.isValidCommentModifier
   ],
   async (req: Request, res: Response) => {
-    await CommentCollection.deleteOne(req.params.commentId);
+    const comment = await CommentCollection.findOne(req.params.commentId);
+    comment.authorId = null;
+    comment.content = '[comment deleted]';
+    await comment.save();
+
     res.status(200).json({
-      message: `Comment with id ${req.params.commentId} successfully deleted.`
+      message: `Comment with id ${req.params.commentId} will appear as deleted with no author shown.`
     });
   }
 );

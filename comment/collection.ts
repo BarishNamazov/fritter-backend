@@ -18,7 +18,9 @@ class CommentCollection {
       dateCreated: date,
       content: commentDetails.content,
       dateModified: date,
-      freetId
+      freetId,
+      replyToId,
+      replyToModel
     });
     await comment.save();
     return comment.populate(['authorId', 'freetId']);
