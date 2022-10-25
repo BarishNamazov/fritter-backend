@@ -116,7 +116,7 @@ router.delete(
 );
 
 router.post(
-  '/requests/:requester?',
+  '/requests/respond/:requester?',
   [
     UserValidator.isUserLoggedIn,
     FriendValidator.isValidUser,

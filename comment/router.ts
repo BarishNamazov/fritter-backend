@@ -17,12 +17,12 @@ const router = express.Router();
 router.get(
   '/',
   async (req: Request, res: Response, next: NextFunction) => {
-    if (req.query.author && req.query.freetId) {
+    if (req.query.author !== undefined && req.query.freetId !== undefined) {
       next();
       return;
     }
 
-    if (req.query.author || req.query.freetId) {
+    if (req.query.author !== undefined || req.query.freetId !== undefined) {
       next('route');
       return;
     }
@@ -53,8 +53,12 @@ router.get(
       return;
     }
 
+    if (!req.query.author) {
+      res.status(400).json({error: 'Provided author username must be nonempty.'});
+    }
+
     if (!await UserCollection.findOneByUsername(req.query.author as string)) {
-      res.status(400).json({error: `A user with username ${req.query.author as string} does not exist.`});
+      res.status(404).json({error: `A user with username ${req.query.author as string} does not exist.`});
       return;
     }
 
@@ -67,7 +71,6 @@ router.get(
     freetValidator.isFreetExistsQuery
   ],
   async (req: Request, res: Response, next: NextFunction) => {
-    const author = await UserCollection.findOneByUsername(req.query.author as string);
     const authorComments = await CommentCollection.findAllVisibleToUser(req.session.userId, {freetId: req.query.freetId});
     const response = authorComments.map(util.constructCommentResponse);
     res.status(200).json(response);

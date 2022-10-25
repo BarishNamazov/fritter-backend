@@ -89,7 +89,7 @@ const isNotAlreadyFriends = async (req: Request, res: Response, next: NextFuncti
   const friendId = (await UserCollection.findOneByUsername(friendUsername))._id;
   const friend = await FriendCollection.findOneFriend(userId, friendId);
   if (friend) {
-    return res.status(400).json({
+    return res.status(409).json({
       error: `You are already friends with ${friendUsername}.`
     });
   }
@@ -115,7 +115,7 @@ const isFriendRequestExists = async (req: Request, res: Response, next: NextFunc
   }
 
   if (!friendRequest) {
-    return res.status(400).json({
+    return res.status(404).json({
       error: `You currently do not have a pending friend request with ${friendUsername}.`
     });
   }
@@ -136,13 +136,13 @@ const isFriendRequestNotExists = async (req: Request, res: Response, next: NextF
   const friendRequest1 = await FriendRequestCollection.findPendingFriendRequest(userId, friendId);
   const friendRequest2 = await FriendRequestCollection.findPendingFriendRequest(friendId, userId);
   if (friendRequest1) {
-    return res.status(400).json({
+    return res.status(409).json({
       error: `You already have a pending friend request to ${friendUsername}.`
     });
   }
 
   if (friendRequest2) {
-    return res.status(400).json({
+    return res.status(409).json({
       error: `You already have a pending friend request from ${friendUsername}, respond to that.`
     });
   }

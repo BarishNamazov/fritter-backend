@@ -9,163 +9,13 @@ Build your own not-quite-[Twitter](https://twitter.com/)!
 The project is structured as follows:
 
 - `index.ts` sets up the database connection and the Express server
-- `/freet` contains files related to freet concept
-  - `collection.ts` contains freet collection class to wrap around MongoDB database
-  - `middleware.ts` contains freet middleware
-  - `model.ts` contains definition of freet datatype
-  - `router.ts` contains backend freet routes
-  - `util.ts` contains freet utility functions for transforming data returned to the client
-- `/user` contains files related to user concept
-  - `collection.ts` contains user collection class to wrap around MongoDB database
-  - `middleware.ts` contains user middleware
-  - `model.ts` - contains definition of user datatype
-  - `router.ts` - contains backend user routes
-  - `util.ts` contains user utility functions for transforming data returned to the client
+- for each `concept`, `/concept` contains files related to that concept
+  - `collection.ts` contains concept collection class to wrap around MongoDB database
+  - `middleware.ts` contains concept middleware
+  - `model.ts` contains definition of concept datatype
+  - `router.ts` contains backend concept routes
+  - `util.ts` contains concept utility functions for transforming data returned to the client
 - `/public` contains the code for the frontend (HTML/CSS/browser JS)
-
-## Installation
-
-Make a copy of this repository under your personal GitHub account by clicking the `Use this template` button. Make sure to enable the `Include all branches` option.
-
-If you did **not** take 6.031 in Fall 2021 or Spring 2022, to ensure that your machine has the necessary software for the assignment, please follow Steps 1, 2, 5, and 6 on [this page](https://web.mit.edu/6.031/www/sp22/getting-started/) from the [6.031 website](https://web.mit.edu/6.031/www/sp22/) (now 6.1020).
-
-### Setting up the demo branch (optional, but very helpful as a reference!)
-
-- Navigate to the root folder of your cloned repository.
-- Run `source demo-setup.sh` to set up the demo branches.
-- Check your local branches with `git branch`; you should have one new branch, with a new commit.
-  - `view-demo` demos how to extend functionality of a resource
-- If everything looks good, run `git push --all origin`. At this point, you should see the demo branch at `https://github.com/<username>/<repo-name>/branches` (and the `view-demo-code` branch can now be deleted!)
-- Now, if you navigate to the commit history of this branch (`https://github.com/<username>/<repo-name>/commits/<branch-name>`), you can click on the "demo:" commit and see exactly what we changed for each demo!
-
-### MongoDB Atlas setup
-
-Follow the instructions [here](https://docs.google.com/presentation/d/1HJ4Lz1a2IH5oKu21fQGYgs8G2irtMqnVI9vWDheGfKM/edit?usp=sharing) to add your fritter project to MongoDB Atlas.
-
-After following the instructions above, you should have copied a secret that looks something like `mongodb+srv://xxxxxx:xxxxxxxxx@cluster0.yc2imit.mongodb.net/?retryWrites=true&w=majority`. Note that this allows complete access to your database, so do not include it anywhere that is pushed to GitHub or any other publicly accessible location.
-
-To allow your local server to connect to the database you just created, create a file named `.env` in the project's root directory with the contents
-
-```
-MONGO_SRV=mongodb+srv://xxxxxx:xxxxxxxxx@cluster0.yc2imit.mongodb.net/?retryWrites=true&w=majority
-```
-
-where the secret is replaced with the one you obtained.
-
-### Post-Installation
-
-After finishing setup, we recommend testing both locally running the starter code, and deploying the code to Vercel, to make sure that both work before you run into issues later. The instructions can be found in the following two sections.
-
-## Running your code locally
-
-Firstly, open the terminal or command prompt and `cd` to the directory for this assignment. Before you make any changes, run the command `npm install` to install all the packages in `package.json`. You do not need to run this command every time you make any changes, unless you add a new package to the dependencies in `package.json`.
-
-Finally, to test your changes locally, run the command `npm start` in the terminal or command prompt and navigate to `localhost:3000` and interact with the frontend to test your routes.
-
-## Deployment to Vercel
-
-We will be using Vercel to host a publicly accessible deployment of your application.
-
-1. Create a fork of this repository through GitHub. This will create a repository in your GitHub account with a copy of the starter code. You'll use this copy to push your work and to deploy from.
-
-2. [Create a Vercel account](https://vercel.com) using your GitHub account.
-
-3. After you log in, go to the [project creation page](https://vercel.com/new) and select `Continue with GitHub` and give Vercel the permissions it asks for.
-
-4. Find the repository you just created and click `Import`. For the `Framework Preset`, choose `Other`. In the `Environment Variables` section, add an entry where `NAME` is `MONGO_SRV` and `VALUE` is your [MongoDB secret](#mongodb-atlas-setup).
-
-5. Click `Deploy` and you will get a link like `https://fritter-starter-abcd.vercel.app/` where you can access your site.
-
-Vercel will automatically deploy the latest version of your code whenever a push is made to the `main` branch.
-
-## Adding new concepts to Fritter
-
-### Backend
-
-The data that Fritter stores is divided into modular collections called "resources". The starter code has only two resources, "freets" and "users". The codebase has the following:
-
-- A model file for each resource (e.g. `freet/model.ts`). This defines the resource's datatype, which defines the resource's backend type, and should be a distilled form of the information this resource holds (as in ADTs). This also defines its schema, which tells MongoDB how to store our resource, and should match with the datatype.
-- A collection file for each resource (e.g. `freet/collection.ts`). This defines operations Fritter might want to perform on the resource. Each operation works on the entire database table (represented by e.g. `FreetModel`), so you would operate on one Freet by using `FreetModel.findOne()`.
-- Routes file (e.g. `freet/router.ts`). This contains the Fritter backend's REST API routes for freets resource, and interact with the resource collection. All the routes in the file are automatically prefixed by e.g. `/api/freets`.
-- Middleware file (e.g `freet/middleware.ts`). This contains methods that validate the state of the resource before performing logic for a given API route. For instance `isFreetExists` in `freet/middleware.ts` ensures that a freet with given `freetId` exists in the database
-
-To add a resource or edit functionality of an existing resource:
-
-- Create/modify files in the four above categories, making sure you have one model file, one collection one router file, and one middleware file per resource.
-  - It helps to go in the order that they're listed above, starting with the resource's datatype.
-- In `freet/utils.ts` and `user/utils.ts` there are type definitions for frontend representations of resources, and functions to convert from a backend resource type. Create/modify these as necessary.
-  - An example: the frontend type definition for User lacks a `password` property, because the frontend should never be receiving users' passwords.
-
-### Frontend
-
-For this assignment, we provide an extremely basic frontend for users to interact with the backend. Each box (html form) represents exactly one API route, with a textbox for each parameter that the route takes.
-
-To add a new route to the frontend, two components need to be added: a form in `public/index.html` and a corresponding event handler in `public/scripts/index.js`. The form will allow the user to input any necessary fields for the route, and the event handler will take the values of these fields and make an API call to your backend.
-
-For example, the form for the user creation route looks like:
-
-```
-<form id="create-user">
-    <h3>Create User</h3>
-    <div>
-        <label for="username">Username:</label>
-        <input id="username" name="username">
-    </div>
-    <div>
-        <label for="password">Password:</label>
-        <input id="password" name="password">
-    </div>
-    <input type="submit" value="Create User">
-</form>
-```
-
-In `public/scripts/user.js`, there is an event handler for this form (event handlers are separated in files by concept, currently `user.js` and `freet.js`), which makes a POST request to the backend:
-
-```
-function createUser(fields) {
-  fetch('/api/users', {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}})
-    .then(showResponse)
-    .catch(showResponse);
-}
-```
-
-Here, `fields` is a `JSON` object which contains key/value pairs, where the key is the name associated with the input field in the form and the value is whatever is entered on the frontend. For instance, in the `form` above, the first input field has name, `username`, which will be a key in `fields` object whose value is whatever has been entered as the username on the frontend. Thus, whatever name you attach to any input field is the same name you will can use to access the value entered in that input field from `fields` object.
-
-To link the form and event handler together, there is an entry in the `formsAndHandlers` object (the key is the `id` attribute of the `<form>` tag and the value is the event handler function) in `public/scripts/index.js`:
-
-```
-const formsAndHandlers = {
-  'create-user': createUser,
-  ...
-};
-```
-
-## MongoDB
-
-MongoDB is how you will be storing the data of your application. It is essentially a document database that stores data as JSON-like objects that have dynamic schema. You can see the current starter code schema in `freet/model.ts` and `user/model.ts`.
-
-### Mongoose
-
-You will be using Mongoose, a Node.js-Object Data Modeling (ORM) library for MongoDB. This is a NoSQL database, so you aren't constrained to a rigid data model, meaning you can add/remove fields as needed. The application connects to the MongoDB database using Mongoose in `index.ts`, where you see `mongoose.connects(...)`. After it connects, you will be able to make [mongoose queries](https://mongoosejs.com/docs/queries.html) such as `FindOne` or `deleteMany`.
-
-### Schemas
-
-In this starter code, we have provided `user` and `freet` collections. Each collection has defined schemas in `*/model.ts`. Once you defined a `Schema`, you must create a `Model` object out of the schema. The instances of your model are what we call "documents", which is what is stored in collections. Each schema maps to a MongoDB collection and defines the shape and structure of documents in that collection, such as what fields the document has. When a schema is defined, documents in the collection _must_ follow the schema structure. You can read more about documents [here](https://mongoosejs.com/docs/documents.html).
-
-To create a new Schema, you first need to define an interface which represents the type definition. You can then create a new `Schema` object by declaring `const ExampleSchema = new Schema<Example>(...)` where `Example` is the type definition on the backend. Then, you can create a model like `const ExampleModel = model<Example>("Example", ExampleSchema)`. You can see a more detailed schema in the `model.ts` files mentioned above.
-
-#### Validation
-
-Mongoose allows you to use schema validation if you want to ensure that certain fields exist. For example, if you look at `freet/model.ts`, you will find fields like
-
-```
-  content: {
-    type: String,
-    required: true
-  }
-```
-
-within the schema. This tells us that the `content` field must have type `String`, and that it is required for documents in that collection. A freet must have a `String` type value for the `content` field to be added to the freets collection.
 
 ## API routes
 
@@ -179,13 +29,13 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Returns**
 
-- An array of all freets sorted in descending order by date modified
+- An array of all accessible freets sorted in descending order by date modified
 
 #### `GET /api/freets?author=USERNAME` - Get freets by author
 
 **Returns**
 
-- An array of freets created by user with username `author`
+- An array of accessible freets created by user with username `author`
 
 **Throws**
 
@@ -197,6 +47,7 @@ This renders the `index.html` file that will be used to interact with the backen
 **Body**
 
 - `content` _{string}_ - The content of the freet
+- `visibility` _{string}_ - `"public"`, `"friends"`, `"only me"` corresponding visibility of freet
 
 **Returns**
 
@@ -207,7 +58,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
 - `403` if the user is not logged in
 - `400` If the freet content is empty or a stream of empty spaces
-- `413` If the freet content is more than 140 characters long
+- `400` if `visibility` is incorrect
 
 #### `DELETE /api/freets/:freetId?` - Delete an existing freet
 
@@ -226,6 +77,7 @@ This renders the `index.html` file that will be used to interact with the backen
 **Body**
 
 - `content` _{string}_ - The new content of the freet
+- `visibility` _{string}_ - `"public"`, `"friends"`, `"only me"` corresponding visibility of freet
 
 **Returns**
 
@@ -238,7 +90,7 @@ This renders the `index.html` file that will be used to interact with the backen
 - `404` if the freetId is invalid
 - `403` if the user is not the author of the freet
 - `400` if the new freet content is empty or a stream of empty spaces
-- `413` if the new freet content is more than 140 characters long
+- `400` if `visibility` is incorrect
 
 #### `POST /api/users/session` - Sign in user
 
@@ -314,156 +166,295 @@ This renders the `index.html` file that will be used to interact with the backen
 
 - `403` if the user is not logged in
 
-#### `GET /api/friends?username=USERNAME` - Get friends of user with username `username`
+#### `GET /api/comments` - Get accessible comments by filtering with author or freedId (or both)
+
+**Query**
+
+- `author` - The username of author we want comments from
+- `freetId` - The id of the freet that comments are in
 
 **Returns**
 
-- If `username` is not specified, it is assumed to be logged in user, if any.
-- An array of all friends of `username`, sorted by date of friendship
+- Array of comments, sorted by date from recent to old
 
 **Throws**
+- `400` is `author` or `freetId` are given but empty
+- `404` if `author`/`freetId` is non-empty but no user/freet match it
 
-- `400` if user is not logged in and `username` is empty
-- `404` if `username` does not exists as username
-
-#### `GET /api/friends/requests?only=INCOMING|OUTGOING` - Get all friend requests
+#### `POST /api/comments/onfreet/:freetId?` - Comment on a freet with given id
 
 **Returns**
 
-- An array of all friend requests the logged in user made or logged in user have gotten, sorted by time they are made.
-- If `only=INCOMING` is specified, return only incoming requests. If `only=OUTGOING` is specified, return only outgoing requests.
+- Success message
+- Comment object
 
 **Throws**
-
+- `400` if `freetId` is missing
 - `403` if the user is not logged in
+- `403` if `freetId` is not accessible by current user
+- `404` if `freetId` is not recognizable as a freet
+  
+#### `POST /api/comments/oncomment/:commentId?` - Comment on a comment with given id
+
+**Body**
+- `content` _{string}_ - comment content
+
+**Returns**
+
+- Success message
+- Comment object
+
+**Throws**
+- `400` if `commentId` is missing
+- `403` if the user is not logged in
+- `403` if freet associated with `commentId` is not accessible by current user
+- `404` if `commentId` is not recognizable as a comment
+
+#### `PUT /api/comments/:commentId` - Modify a comment with given id
+
+**Body**
+- `content` _{string}_ - comment content
+
+**Returns**
+
+- Success message
+- Comment object
+
+**Throws**
+- `400` if `commentId` is missing
+- `403` if freet associated with `commentId` is not accessible by current user (e.g., visibility of freet changed)
+- `403` if current user is not author of comment with `commentId`
+- `404` if `commentId` is not recognizable as a comment
+
+#### `DELETE /api/comments/:commentId` - Delete a comment with given id (delete means mark it as delete rather than purging it)
+
+**Returns**
+
+- Success message
+
+**Throws**
+- `400` if `commentId` is missing
+- `403` if freet associated with `commentId` is not accessible by current user (e.g., visibility of freet changed)
+- `403` if current user is not author of comment with `commentId`
+- `404` if `commentId` is not recognizable as a comment
+
+#### `GET /api/follows/` - Get users who you follow
+
+**Returns**
+
+- Array of follow objects where currently logged in user is the follower, sorted by following date first being most recent.
+
+**Throws**
+
+- `403` if user is not logged in
+
+#### `PUT /api/follows/:followee?` - Follow user with given username 
+
+**Returns**
+
+- Success message
+- Follow object
+
+**Throws**
+
+- `403` if user is not logged in
+- `400` if `followee` is missing
+- `404` if `followee` is not recognizable user
+- `409` if already following or `followee` is user itself
+
+#### `DELETE /api/follows/:followee?` - Unfollow user with given username 
+
+**Returns**
+
+- Success message
+
+**Throws**
+
+- `403` if user is not logged in
+- `400` if `followee` is missing
+- `404` if `followee` is not recognizable user
+- `409` if already not following or `followee` is user itself
+
+#### `GET /api/follows/count/:followee?` - Get count of followers of user with given username
+
+**Returns**
+
+- Username (i.e. `followee`)
+- Follower count of `followee`
+
+**Throws**
+- `400` if `followee` is missing
+- `404` if `followee` is not recognizable user
+
+#### `GET /api/follows/freets` - Get freets by followings
+
+**Returns**
+
+- Array of accessible freets posted by followings of logged in user, sorted by date first one being most recent
+
+**Throws**
+
+- `403` if user not logged in
 
 
-#### `POST /api/friends/requests` - Make a friend request
+#### `GET /api/friends/list` - Get your friends
+
+**Returns**
+
+- Array of friend objects, sorted by date first one being most recent
+  
+**Throws**
+- `403` if user not logged in
+
+#### `GET /api/friends/list/:friend` - Get friends of your friend
+
+**Returns**
+- Array of friend objects, sorted by date first one being most recent
+
+**Throws**
+- `403` if user not logged in
+- `404` if `friend` is not recognizable username
+- `403` if `friend` is not a friend of current user
+
+#### `DELETE /api/friends/list/:friend?` - Unfriend someone
+
+**Returns**
+- Success message
+
+**Throws**
+- `403` if user not logged in
+- `400` is `friend` is empty
+- `404` if `friend` is not recognizable username
+- `403` if `friend` is not a friend of current user
+
+#### `GET /api/friends/requests` - Get your friend requests
+
+**Returns**
+- Array of friend request objects, sorted by date first one being most recent
+
+**Throws**
+- `403` if user not logged in
+
+#### `PUT /api/friends/requests/:requestee?` - Make a friend request
+**Returns**
+- Success message
+- Friend request object
+
+**Throws**
+- `403` if user not logged in
+- `400` is `requestee` is empty
+- `404` if `requestee` is not recognizable username
+- `409` if already friends with `requestee`, or has incoming or sent friend request to `requestee`
+  
+#### `DELETE /api/friends/requests/:requestee?` - Withdraw a friend request
+**Returns**
+- Success message
+
+**Throws**
+- `403` if user not logged in
+- `400` is `requestee` is empty
+- `404` if `requestee` is not recognizable username
+- `404` if friend request does not exist
+
+#### `PUT /api/friends/requests/respond/:requester?` - Respond to a friend request
+
+**Returns**
+- Success message
+- Friend request object
+
+**Throws**
+- `403` if user not logged in
+- `400` is `requester` is empty
+- `404` if `requester` is not recognizable username
+- `404` if friend request does not exist
+
+#### `GET /api/quickaccess/` - Get quick access list
+
+**Returns**
+
+- An array of quick access entries, in the same order as user specified
+
+**Throws**
+
+- `403` if user not logged in
+  
+
+#### `PUT /api/quickaccess` - Update quick access list
 
 **Body**
 
-- `username` _{string}_ - The other user's username
+- `entries` _{Array<name: string, url: string>}_ - entries of quick access list
 
 **Returns**
 
-- A success message
-- An object with the created request
+- Success message
+- Updated quick access object
 
 **Throws**
+- `403` if uset not logged in
+- `400` if any name is empty or have something other than letters, digits and spaces
+- `400` if there are duplicate names
+- `400` if any url in entries is invalid
 
-- `403` if the user is not logged in
-- `404` if `username` does not exist
-- `409` if `username` is already a friend, or `username` is already requests to be friend, or it is the user itself
+#### `GET /api/votes/my` - Get all voted freets or comments
 
-#### `DELETE /api/friends/requests?requestId=REQUESTID` - Withdraw a made friend request
+**Returns**
+- Array of upvote objects that are done by user, sorted by date first one being most recent
+
+**Throws**
+- `403` if user not logged in
+
+#### `PUT /api/votes/freet/:freetId?` - Vote a freet
 
 **Body**
-
-- `requestId` _{string}_ - The other user's username
+- `vote` _{string}_ - `"upvote"` or `"downvote"`
 
 **Returns**
-
-- A success message
+- Success message
+- Number of new upvotes and downvotes
 
 **Throws**
+- `403` if user not logged in or freet is not accessible
+- `400` if `freetId` is empty
+- `404` if `freetId` is not recognizable freet
+- `400` if `vote` is invalid or missing
 
-- `403` if the user is not logged in or `requestId` is not created by user
-- `404` if `requestId` does not exist
-- `409` is `requestId` is already responded
+#### `DELETE /api/votes/freet/:freetId?` - Unvote a freet
 
-#### `POST /api/friends/requests/respond` - Respond to a friend request
+**Returns**
+- Success message
+- Number of new upvotes and downvotes
+
+**Throws**
+- `403` if user not logged in or freet is not accessible
+- `400` if `freetId` is empty
+- `404` if `freetId` is not recognizable freet
+- `404` if vote does not exist
+- 
+#### `PUT /api/votes/comment/:commentId?` - Vote a comment
 
 **Body**
-
-- `requestId` _{string}_ - The request id
-- `response` _{string}_ - "accept" or "reject"
+- `vote` _{string}_ - `"upvote"` or `"downvote"`
 
 **Returns**
-- A success message
+- Success message
+- Number of new upvotes and downvotes
 
 **Throws**
-- `400` if any of body parameters missing or `response` is not `'accept'` or `'reject'`
-- `403` if `requestId` is not incoming request to user
-- `404` if `requestId` does not exist
-- `409` if `requestId` is already responded
+- `403` if user not logged in or comment is not accessible
+- `400` if `commentId` is empty
+- `404` if `commentId` is not recognizable comment
+- `400` if `vote` is invalid or missing
 
-#### `GET /api/followers?username=USERNAME` - Get all followers of user with username `username`
+#### `DELETE /api/votes/comment/:commentId?` - Unvote a comment
 
 **Returns**
-
-- If `username` is not specified, it is assumed to be logged in user, if any.
-- An array of all followers of `username`, sorted by date of follow
-
-**Throws**
-
-- `400` if user is not logged in and `username` is empty
-- `404` if `username` does not exists as username
-
-#### `POST /api/followers` - Follow someone
-
-**Body**
-
-- `username` _{string}_ - The other user's username
-
-**Returns**
-
-- A success message
-- An object with the created follow
+- Success message
+- Number of new upvotes and downvotes
 
 **Throws**
+- `403` if user not logged in or comment is not accessible
+- `400` if `commentId` is empty
+- `404` if `commentId` is not recognizable comment
+- `404` if vote does not exist
 
-- `403` if the user is not logged in
-- `404` if `username` does not exist
-- `409` if `username` is already followed or it is the user itself
-
-#### `DELETE /api/followers?username=USERNAME` - Unfollow user with username `username`
-
-**Returns**
-- A success message
-
-**Throws**
-- `403` if the user is not logged in
-- `404` if `username` does not exist
-- `409` if `username` is not followed or it is the user itself
-
-(following APIs are very draft and I am planning to ask questions about them, so I only sketched them instead of full descriptions)
-
-#### `GET /api/comments?author=USERNAME` - Get comments of `author`
-
-#### `GET /api/comments?commentId=COMMENTID` - Get comment with id `commentId`
-
-#### `GET /api/comments/:freetId?` - Get comments of freet with id `freetId`
-
-#### `POST /api/comments/:freetId?` - Post comment under freet with id `freetId`
-
-#### `PUT /api/comments/:commentId?` - Edit comment with id `commentId`
-
-#### `DELETE /api/comments/:commentId?` - Delete comment with id `commentId`
-
-#### `GET /api/upvotes?freetId=FREETID` - Get number of upvotes for freet with id `freetId`
-
-#### `GET /api/upvotes?commentId=COMMENTID` - Get number of upvotes for comment with id `commentId`
-
-#### `PUT /api/upvotes/` - Vote (upvote or downvote) object (freet or comment) with given id
-
-#### `DELETE /api/upvotes?freetId=FREETID` - Unvote freet with given id
-
-#### `DELETE /api/upvotes?commentId=COMMENTID` - Unvote comment with given id
-
-#### `GET /api/trusted` - Get list of all trusted users
-
-#### `GET /api/trusted/:username?` - Get if user with given username is trusted
-
-#### `PUT /api/trusted/:username?` - Make user trusted
-
-#### `DELETE /api/trusted/:username?` - Make user not trusted
-
-#### `GET /quickaccess` - Get QuickAccess entries for logged in user (implemented)
-
-#### `PUT /quickaccess` - Update QuickAccess entries for logged in user (implemented)
-
-#### `GET /takebreak/:username?` - Get if user with `username` is taking a break
-
-#### `POST /takebreak/:username?` - Take a break with given freet in body
-
-#### `POST /takebreak/:username?/end` - End the break with given freet in body (can't use `DELETE` since it has no body)

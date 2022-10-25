@@ -43,7 +43,7 @@ router.put(
 );
 
 router.delete(
-  '/:followee',
+  '/:followee?',
   [
     userValidator.isUserLoggedIn,
     followValidator.isValidFollowee,

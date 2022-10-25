@@ -51,7 +51,7 @@ const isFollowing = async (req: Request, res: Response, next: NextFunction) => {
   if (follow) {
     next();
   } else {
-    res.status(404).json({error: `You are already not following user with username "${followee}"`});
+    res.status(409).json({error: `You are already not following user with username "${followee}"`});
   }
 };
 

@@ -21,5 +21,5 @@ function withdrawRequest(fields) {
 }
 
 function respondRequest(fields) {
-  fetch(`/api/friends/requests/${fields.friend}`, {method: 'POST', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}}).then(showResponse).catch(showResponse);
+  fetch(`/api/friends/requests/respond/${fields.friend}`, {method: 'PUT', body: JSON.stringify(fields), headers: {'Content-Type': 'application/json'}}).then(showResponse).catch(showResponse);
 }

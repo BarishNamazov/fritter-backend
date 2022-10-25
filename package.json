@@ -6,7 +6,8 @@
   "scripts": {
     "start": "ts-node api/index.ts",
     "dev": "nodemon api/index.ts -e js,ts,json",
-    "lint": "eslint . --fix --ext=.ts"
+    "lint": "eslint . --fix --ext=.ts",
+    "test": "ts-node api/test.ts"
   },
   "dependencies": {
     "debug": "~4.3.4",

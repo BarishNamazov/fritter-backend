@@ -79,7 +79,7 @@ app.get('/', (req: Request, res: Response) => {
 // Add routers from routes folder
 app.use('/api/takebreaks', takeBreakRouter);
 app.use('/api/users', userRouter);
-app.use('/api/upvotes', upvoteRouter);
+app.use('/api/votes', upvoteRouter);
 app.use('/api/freets', freetRouter);
 app.use('/api/follows', followRouter);
 app.use('/api/comments', commentRouter);
