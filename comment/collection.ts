@@ -23,15 +23,15 @@ class CommentCollection {
       replyToModel
     });
     await comment.save();
-    return comment.populate(['authorId', 'freetId']);
+    return comment.populate(['authorId', 'freetId', 'numUpvotes', 'numDownvotes']);
   }
 
   static async findOne(commentId: MongoId): Promise<HydratedDocument<Comment>> {
-    return CommentModel.findById(commentId).populate(['authorId', 'freetId']);
+    return CommentModel.findById(commentId).populate(['authorId', 'freetId', 'numUpvotes', 'numDownvotes']);
   }
 
   static async findAll(filter: Record<string, any> = {}): Promise<Array<HydratedDocument<Comment>>> {
-    return CommentModel.find(filter).sort({dateModified: -1}).populate(['authorId', 'freetId']);
+    return CommentModel.find(filter).sort({dateModified: -1}).populate(['authorId', 'freetId', 'numUpvotes', 'numDownvotes']);
   }
 
   static async findAllVisibleToUser(userId: MongoId, filter: Record<string, any> = {}): Promise<Array<HydratedDocument<Comment>>> {
