@@ -4,6 +4,12 @@ import FreetCollection from '../freet/collection';
 import UserCollection from './collection';
 import * as userValidator from '../user/middleware';
 import * as util from './util';
+import QuickAccessModel from 'quickaccess/model';
+import {FriendModel} from 'friend/model';
+import FollowModel from 'follow/model';
+import UpvoteModel from 'upvote/model';
+import TakeBreakModel from 'takebreak/model';
+import CommentModel from 'comment/model';
 
 const router = express.Router();
 
@@ -142,9 +148,20 @@ router.delete(
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
     await UserCollection.deleteOne(userId);
     await FreetCollection.deleteMany(userId);
+    await QuickAccessModel.deleteMany({userId});
+    await FriendModel.deleteMany({friendship: userId});
+    await FollowModel.deleteMany({$or: [{follower: userId}, {followee: userId}]});
+    await UpvoteModel.deleteMany({userId});
+    await TakeBreakModel.deleteMany({userId});
+    const allComments = await CommentModel.find({userId});
+    await Promise.all(allComments.map(async comment => {
+      comment.authorId = null;
+      return comment.save();
+    }));
+
     req.session.userId = undefined;
     res.status(200).json({
-      message: 'Your account has been deleted successfully.'
+      message: 'Your account and everything associated with it has been deleted successfully.'
     });
   }
 );
