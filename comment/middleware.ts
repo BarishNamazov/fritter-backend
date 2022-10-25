@@ -81,6 +81,13 @@ const isCommentAccessible = async (req: Request, res: Response, next: NextFuncti
     return;
   }
 
+  if (!comment.authorId) {
+    res.status(403).json({
+      error: 'This comment has been deleted.'
+    });
+    return;
+  }
+
   next();
 };
 
