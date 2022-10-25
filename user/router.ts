@@ -4,12 +4,12 @@ import FreetCollection from '../freet/collection';
 import UserCollection from './collection';
 import * as userValidator from '../user/middleware';
 import * as util from './util';
-import QuickAccessModel from 'quickaccess/model';
-import {FriendModel} from 'friend/model';
-import FollowModel from 'follow/model';
-import UpvoteModel from 'upvote/model';
-import TakeBreakModel from 'takebreak/model';
-import CommentModel from 'comment/model';
+import QuickAccessModel from '../quickaccess/model';
+import {FriendModel} from '../friend/model';
+import FollowModel from '../follow/model';
+import UpvoteModel from '../upvote/model';
+import TakeBreakModel from '../takebreak/model';
+import CommentModel from '../comment/model';
 
 const router = express.Router();
 

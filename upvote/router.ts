@@ -3,7 +3,7 @@ import express from 'express';
 
 import UpvoteCollection from './collection';
 import FreetCollection from '../freet/collection';
-import CommentCollection from 'comment/collection';
+import CommentCollection from '../comment/collection';
 import * as freetValidator from '../freet/middleware';
 import * as userValidator from '../user/middleware';
 import * as commentValidator from '../comment/middleware';
