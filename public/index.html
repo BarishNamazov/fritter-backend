@@ -311,8 +311,13 @@ My Freets, https://www.fritter.com/my/freets
 
         <form id="vote-thing">
           <h3>Vote on a freet or comment</h3>
+          <div style="display: block;">
+            <label for="model">Voting for</label>
+            <input type="radio" name="model" value="freet" checked/> Freet
+            <input type="radio" name="model" value="comment"/> Comment
+          </div>
           <div>
-            <label for="id">ID (Freet or Comment)</label>
+            <label for="id">ID of above</label>
             <input id="id" name="id"/>
           </div>
           <div style="display: block">
@@ -325,8 +330,13 @@ My Freets, https://www.fritter.com/my/freets
 
         <form id="unvote-thing">
           <h3>Unvote on a freet or comment</h3>
+          <div style="display: block;">
+            <label for="model">Unvoting</label>
+            <input type="radio" name="model" value="freet" checked/> Freet
+            <input type="radio" name="model" value="comment"/> Comment
+          </div>
           <div>
-            <label for="id">ID (Freet or Comment)</label>
+            <label for="id">ID of above</label>
             <input id="id" name="id"/>
           </div>
           <input type="submit" value="Take vote back">

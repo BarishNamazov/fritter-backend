@@ -53,7 +53,7 @@ class QuickAccessCollection {
    * @returns - The updated QuickAccess entry.
    */
   static async updateOneByUserId(userId: Types.ObjectId | string, quickAccessEntries: Array<{name: string; url: string}>): Promise<HydratedDocument<QuickAccess>> {
-    const quickAccess = await QuickAccessModel.findOne({userId});
+    const quickAccess = await this.findOneByUserId(userId);
     quickAccess.entries = quickAccessEntries;
     quickAccess.dateUpdated = new Date();
     await quickAccess.save();

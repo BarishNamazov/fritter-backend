@@ -28,8 +28,8 @@ router.put(
     quickAccessValidator.isValidEntries
   ],
   async (req: Request, res: Response) => {
-    const userId = (req.session.userId as string) ?? '';
-    console.log(req.body.entries);
+    const userId = req.session.userId as string;
+    console.log(req.session.userId, req.body.entries);
     const quickAccess = await QuickAccessCollection.updateOneByUserId(
       userId, req.body.entries
     );

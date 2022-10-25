@@ -115,7 +115,7 @@ router.delete(
   }
 );
 
-router.post(
+router.put(
   '/requests/respond/:requester?',
   [
     UserValidator.isUserLoggedIn,

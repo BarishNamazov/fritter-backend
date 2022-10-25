@@ -290,7 +290,7 @@ This renders the `index.html` file that will be used to interact with the backen
 
 **Returns**
 
-- Array of accessible freets posted by followings of logged in user, sorted by date first one being most recent
+- Array of accessible freets posted by followings of logged in user, sorted by date first one being most recent. These freets will include your freets as well.
 
 **Throws**
 
